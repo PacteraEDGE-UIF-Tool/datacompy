@@ -23,7 +23,7 @@ DATAFRME_DISPLAY_WIDTH = None
 LIST_COLUMNS_HAVE_BEEN_SELECT = None
 
 # =======================================================
-# Declare the callback function that can use to execute the comparison logic.
+# # Declare the callback function is used to execute the comparison logic.
 # =======================================================
 def onComparisonButtonClick():
   if first_df is None:
@@ -34,7 +34,7 @@ def onComparisonButtonClick():
     # Create a text element and let the reader know the data is loading.
     # data_load_state = st.text('comparing data...')
     with st.spinner('comparing data ....'):
-    # result = difference between to data frame
+    # result = difference between two data frame
     # left_result_df=pd.merge(first_df, second_df, how='left', indicator=True)
     # left_result_df=left_result_df.drop(left_result_df[left_result_df._merge=="both"].index)
       result_df = pd.concat([first_df, second_df], keys=[
@@ -83,17 +83,6 @@ def highlight(s, the_list):
 # =======================================================
 first_uploaded_file = st.file_uploader("Choose a file", key="first_uploader")
 if first_uploaded_file is not None:
-    # To read file as bytes:
-    # bytes_data = uploaded_file.getvalue()
-    # st.write(bytes_data)
-
-    # To convert to a string based IO:
-    # stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
-    # st.write(stringio)
-
-    # To read file as string:
-    # string_data = stringio.read()
-    # st.write(string_data)
 
     # Can be used wherever a "file-like" object is accepted:
     try:
@@ -101,7 +90,6 @@ if first_uploaded_file is not None:
     except IOError as e:
       print(f"There is an error occur while parsing the csv file. error message \n {e}")
       st.write("There is an error occur while parsing the csv file. please check the file format first.")
-
 
     # this will show the header
     header_of_first_df=origin_first_df.columns.values
@@ -123,7 +111,6 @@ if first_uploaded_file is not None:
   
 
     #select the range of number going to be processed
-
     first_row_data_number=first_df.shape[0]
 
     first_recommend_data_number=first_row_data_number 
@@ -136,10 +123,11 @@ if first_uploaded_file is not None:
     st.write('Values:', first_range_values)
     first_df=first_df.loc[first_range_values[0]:first_range_values[1]]
     st.dataframe(first_df)
+
+
 # =======================================================
 # Uploader for the second file
 # =======================================================
-
 second_uploaded_file = st.file_uploader("Choose a file", key="second_uploader")
 if second_uploaded_file is not None:
     try:
