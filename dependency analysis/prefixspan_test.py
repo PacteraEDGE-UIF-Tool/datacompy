@@ -2,6 +2,7 @@
 
 WIN10_FILE_NAME_NAME="clean_data_win10.txt"
 
+from re import S
 from prefixspan import PrefixSpan
 import random
 
@@ -9,7 +10,7 @@ import random
 #Global variables
 MIN_RAND_VALUE=3
 MAX_RAND_VALUE=10
-
+PATTERN_NUMBER_THRESHOLD=5
 
 
 '''
@@ -24,7 +25,7 @@ example:
    func(1,5, 20) =>[1,2,3,4,1,2,3,4]
 '''
 def create_random_number_range_seqence_lenth_generator(min_v, max_v, token_number):
-    assert(min_v is not 0)
+    assert(min_v > 0)
     assert(max_v < token_number)
     rand_list=[]
     total_number=token_number
@@ -60,8 +61,10 @@ def gen_2d_array_with_rand_list(tokens, rand_list):
         array=[]
         count+=rand_val
     return two_d_array
-        
+'''
+#Function Name:
 
+'''
 
 #===================================================
 #Function Name:
@@ -70,6 +73,12 @@ def gen_2d_array_with_rand_list(tokens, rand_list):
 #   program entry
 #===================================================
 def main():
+
+
+    filtered_pattern_list=[]
+
+
+
     data=None
     data=open(WIN10_FILE_NAME_NAME, 'r', encoding='utf-8').read()
     assert(data is not None)
@@ -80,6 +89,8 @@ def main():
     rand_list=create_random_number_range_seqence_lenth_generator(MIN_RAND_VALUE, MAX_RAND_VALUE, tokens_num)
     
     data_array=gen_2d_array_with_rand_list(tokens, rand_list)
+    
+    
     #print(data_array[:10])
     ps = PrefixSpan(data_array)
 
@@ -90,9 +101,20 @@ def main():
     patterns=ps.topk(6000)
     for pattern in patterns:
         #pattern in the form like (24794, ['TlsGetValue_OK'])
-        if len(pattern[1])>5:
-            print(pattern[1])
+        #if the pattern length> threshold then push it into list
+        #.e.g ['a','b','a','c'] pattern length=4
+        if len(pattern[1])>PATTERN_NUMBER_THRESHOLD:
+            filtered_pattern_list.append(pattern[1])
+
+    #store the first element in pattern
+    # .e.g ['CallNextHookEx_OK', 'PeekMessageW_OK', 'DispatchMessageW_*', 'TlsGetValue_OK', 'GetWindowLongW_*', 'GetWindowLongW_OK']
+    for sequential_patterns in filtered_pattern_list:
+        if  sequential_patterns[0]
+
+    keys_list=dict()
     
+
+
 
 if __name__=="__main__":
     main()
