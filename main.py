@@ -64,7 +64,7 @@ def onComparisonButtonClick():
             highlight, the_list=the_list_of_right_index, axis=1), width=DATAFRME_DISPLAY_WIDTH)
     st.success('Done!')
     # draw dataframe
-    st.header("Difference message in detial.")
+    st.header("Difference message in detail.")
     st.dataframe(result_df)
 
 # ========================================================
