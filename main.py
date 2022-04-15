@@ -9,6 +9,9 @@ import pandas as pd
 import numpy as np
 # for generate unique widget key
 from uuid import uuid4
+import streamlit.components.v1 as components
+import pathlib
+import os
 
 #Page title
 st.title('Log comparison and analysis')
@@ -25,6 +28,7 @@ LIST_COLUMNS_HAVE_BEEN_SELECT = None
 # =======================================================
 # # Declare the callback function is used to execute the comparison logic.
 # =======================================================
+
 def onComparisonButtonClick():
   if first_df is None:
     st.error("There is error in generating the first dataframe, please check the format of the uploaded file.")
@@ -66,6 +70,22 @@ def onComparisonButtonClick():
     # draw dataframe
     st.header("Difference message in detail.")
     st.dataframe(result_df)
+    
+    current_path=pathlib.Path(__file__).parent.resolve()
+    #========================================================
+    #Show the save button only result_df!=0
+    #========================================================
+    output_file_name = st.text_input('Output file name', 'compare_result.csv')
+      # Make folder picker dialog appear on top of other windows
+    if len(output_file_name) == 0:
+        output_file_name="compare_result.csv"
+    out_file_path=os.path.join(current_path, output_file_name)
+    st.write(out_file_path)
+    st.button("savefile", key=str("save_button"), help=None,  disabled=False, on_click=saveFile(out_file_path, result_df))
+
+def saveFile(file_path, df):
+  open(file_path, 'w+', encoding="utf-8").write(df.to_csv())
+
 
 # ========================================================
 # Generate pandas dataframe style, render the background into yellow,
@@ -141,14 +161,26 @@ if second_uploaded_file is not None:
 
     #multiple selector, the return value type is a list
     #the default value is the columns been selected in first step.
-    second_file_options = st.multiselect(
-      'Please select the column that you want to conduct comparion process.',
-      options=list(header_of_first_df),
-      default=list(first_file_options)
-      )
-    st.write('You selected:', second_file_options)
-    if first_file_options != second_file_options:
-      st.warning('The selected columns is not the same, make sure what you are doing before continue.')
+
+
+    #if the user upload the second file first, some variable will become not defined,
+    #the following is a mitigation approach to such problem.
+    try:
+      second_file_options = st.multiselect(
+        'Please select the column that you want to conduct comparion process.',
+        options=list(header_of_first_df),
+        default=list(first_file_options)
+        )
+      st.write('You selected:', second_file_options)
+      if first_file_options != second_file_options:
+        st.warning('The selected columns is not the same, make sure what you are doing before continue.')
+    except NameError:
+        second_file_options = st.multiselect(
+        'Please select the column that you want to conduct comparion process.',
+        options=list(header_of_second_df),
+        default=list(header_of_second_df)
+        )
+
 
     #drop the non-selected columns from the original one.
     second_not_been_select_list=[x for x in origin_second_df if x not in second_file_options]
@@ -169,16 +201,33 @@ if second_uploaded_file is not None:
     st.write('Values:', second_range_values)
 
     second_df=second_df.loc[second_range_values[0]:second_range_values[1]]
+
     st.dataframe(second_df)
 
-      
+
 
 # =======================================================
 # Create a button that can be clicked by user
 # =======================================================
 st.button("execute the comparison proccess", key=str(uuid4()), help=None, on_click=onComparisonButtonClick, disabled=False)
 
-# =======================================================
-# Compare 2 different dataframe onclick
-# =======================================================
-st.subheader('Raw data')
+
+
+
+
+
+
+def material_login(title, key=None):
+    return _material_login(title=title, key=key)
+
+
+USERNAME = "a@a.com"
+PASSWORD = "test"
+
+_material_login = components.declare_component(
+    "material_login", url="http://localhost:3001",
+)
+
+logged_in_data = material_login("Insert your account")
+
+#st.write(logged_in_data)
