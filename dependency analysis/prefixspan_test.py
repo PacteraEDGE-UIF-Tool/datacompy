@@ -95,8 +95,8 @@ def main():
     ps = PrefixSpan(data_array)
 
     '''
-    For both frequent and top-k algorithms, a custom key function key=lambda patt, matches: ... can be applied,
-    where patt is the current pattern and matches is the current list of matching sequence (id, position) tuples.
+    For both frequentcy and top-k algorithms, a custom key function key=lambda patt, matches: ... can be applied,
+    where pattern is the current pattern and matches is the current list of matching sequence (id, position) tuples.
     '''
     patterns=ps.topk(6000)
     for pattern in patterns:
@@ -111,9 +111,8 @@ def main():
     for sequential_patterns in filtered_pattern_list:
         if  sequential_patterns[0]
 
-    keys_list=dict()
-    
-
+    #we need to create a dictionary in following form {"first function name", "original sequence" }, {first function name, sequence length}    
+    #set{hash(original_sequence)}
 
 
 if __name__=="__main__":
