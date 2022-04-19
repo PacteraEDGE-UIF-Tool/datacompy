@@ -1,16 +1,24 @@
 
 
-WIN10_FILE_NAME_NAME="clean_data_win10.txt"
+WIN10_FILE_NAME_NAME="cleaned_data_win10.txt"
 
 from re import S
 from prefixspan import PrefixSpan
 import random
+import sqlite3
+import traceback
+import sys
+import os
+import hashlib
+md5 = hashlib.md5()
+
 
 
 #Global variables
 MIN_RAND_VALUE=3
 MAX_RAND_VALUE=10
 PATTERN_NUMBER_THRESHOLD=5
+DATABASE="Sqlite3.db"
 
 
 '''
@@ -76,6 +84,15 @@ def main():
 
 
     filtered_pattern_list=[]
+    first_pattern_list=[]
+
+    if os.path.isfile(DATABASE):
+        os.remove(DATABASE)
+
+
+
+    connection=sqlite3.connect(DATABASE)
+    cursor=connection.cursor()
 
 
 
@@ -106,13 +123,81 @@ def main():
         if len(pattern[1])>PATTERN_NUMBER_THRESHOLD:
             filtered_pattern_list.append(pattern[1])
 
+    #Create Sqlite table
+    try:
+        cursor.execute("""
+            CREATE TABLE pattern_info(
+                Hash_of_original_sequential_patterns TEXT PRIMARY KEY,
+                Hash_of_unique_sequential_patterns TEXT,
+                Sequence_length INTEGER,
+                First_pattern TEXT,
+                Unique_sequential_pattern  TEXT,
+                Original_sequential_pattern TEXT
+            );
+        """)
+        connection.commit()
+    except sqlite3.Error as er:
+        print('SQLite error: %s' % (' '.join(er.args)))
+        print("Exception class is: ", er.__class__)
+        print('SQLite traceback: ')
+        exc_type, exc_value, exc_tb = sys.exc_info()
+        print(traceback.format_exception(exc_type, exc_value, exc_tb))
+        connection.close()
+    
+
     #store the first element in pattern
     # .e.g ['CallNextHookEx_OK', 'PeekMessageW_OK', 'DispatchMessageW_*', 'TlsGetValue_OK', 'GetWindowLongW_*', 'GetWindowLongW_OK']
     for sequential_patterns in filtered_pattern_list:
-        if  sequential_patterns[0]
+        the_concatted_sequential_pattern=(" ").join(sequential_patterns)
+        encode_concatted_str=the_concatted_sequential_pattern.encode("utf-8")
+        md5.update(encode_concatted_str)
+        hash_value=md5.hexdigest()
 
-    #we need to create a dictionary in following form {"first function name", "original sequence" }, {first function name, sequence length}    
-    #set{hash(original_sequence)}
+        sequence_length=len(sequential_patterns)
+
+        first_pattern=sequential_patterns[0]
+        first_pattern_list.append(first_pattern)
+
+        unique_set=[]
+        for pattern in sequential_patterns:
+            if pattern not in unique_set:
+                unique_set.append(pattern)
+        concatted_unique_sequential_pattern=((" ").join(unique_set))     
+        md5.update(concatted_unique_sequential_pattern.encode("utf-8"))
+        hash_of_unique_set_value=md5.hexdigest()
+
+        concatted_original_sequential_pattern=(" ").join(sequential_patterns)
+
+        SQL_INSERT_DATA_SRT=f"""
+        INSERT INTO pattern_info (
+            Hash_of_original_sequential_patterns,
+            Hash_of_unique_sequential_patterns,
+            Sequence_length,
+            First_pattern,
+            Unique_sequential_pattern,
+            Original_sequential_pattern) VALUES(
+            \'{hash_value}\',
+            \'{hash_of_unique_set_value}\',
+            {sequence_length},
+            \'{first_pattern}\',
+            \'{concatted_unique_sequential_pattern}\',
+            \'{concatted_original_sequential_pattern}\'
+            );
+            """
+        print(SQL_INSERT_DATA_SRT)
+    try:
+        cursor.execute(SQL_INSERT_DATA_SRT)
+        connection.commit()
+    except sqlite3.Error as er:
+        print('SQLite error: %s' % (' '.join(er.args)))
+        print("Exception class is: ", er.__class__)
+        print('SQLite traceback: ')
+        exc_type, exc_value, exc_tb = sys.exc_info()
+        print(traceback.format_exception(exc_type, exc_value, exc_tb))
+        connection.close()
+    
+    
+
 
 
 if __name__=="__main__":
