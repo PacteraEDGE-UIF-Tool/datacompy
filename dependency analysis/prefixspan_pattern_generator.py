@@ -1,7 +1,5 @@
 
 
-WIN10_FILE_NAME_NAME=r"C:\Users\sheng\experiments\Log_analysis\dependency analysis\cleaned_data_win10.txt"
-
 from encodings import search_function
 from enum import unique
 from re import S
@@ -21,6 +19,10 @@ import matplotlib.pyplot as plt
 
 
 #Global variables
+
+
+WIN10_FILE_NAME=r"E:\experiments\Log_analysis\dependency analysis\cleaned_data_win10.txt"
+WIN11_FILE_NAME=r"E:\experiments\Log_analysis\dependency analysis\cleaned_data_win10.txt"
 MIN_RAND_VALUE=2
 MAX_RAND_VALUE=10
 #the minum threshold for pattern appear time
@@ -371,6 +373,32 @@ def visualizeResult(match_interval_start, match_width_list, unmatch_interval_sta
     plt.show() 
 
 
+
+'''
+#Description:
+    #Why we need match map? not just return the range?, because the interval can be merged,
+    #.e.g    [2,1] mean index 2 with 1 length pattern match, but there might have [1,3] 
+'''
+def createMatchMap(Result_patterns_list, index_dictionary, tokens):
+
+    match_pattern_indexies_range_list=list()
+    match_map=[False for i in range(0,len(tokens))]
+    assert(len(match_map)==len(tokens))
+
+    for patterns in Result_patterns_list:
+        patterns_len=len(patterns)
+        #use the first pattern of paterns to look up dictionary.
+        indexies=index_dictionary[patterns[0]]
+        result_match_list=matchIndexAndPattern(indexies, patterns, tokens)
+        for result_index in result_match_list:
+            match_pattern_indexies_range_list.append((result_index, patterns_len))
+    for from_to_tupple in match_pattern_indexies_range_list:
+        (index_from, patterns_len) = from_to_tupple
+        if index_from + patterns_len < len(tokens):
+            for i in range(0, patterns_len):
+                #print(index_from, patterns_len)
+                match_map[index_from+i]=True
+    return match_map
 #===================================================
 #Function Name:
 #   Main
@@ -388,23 +416,38 @@ def main():
 
     connection=sqlite3.connect(DATABASE)
     cursor=connection.cursor()
-
+    
+    
+    
+    #read data
     win10data=None
-    win10data=open(WIN10_FILE_NAME_NAME, 'r', encoding='utf-8').read()
+    win10data=open(WIN10_FILE_NAME, 'r', encoding='utf-8').read()
     assert(win10data is not None)
 
+
+    win11data=None
+    win11data=open(WIN11_FILE_NAME,'r', encoding='utf-8').read()
+
+
+    #create tokens
     tokens=win10data.split()
+    win11_tokens=win11data.split()
+
+
+    #create dictionary return a python dictionary in following form dic{"first_pattern":[1,100,1000...],second_pattern}
+    win11_index_dictionary=createIndexDictionary(win11_tokens)
     index_dictionary=createIndexDictionary(tokens)
 
 
     
 
     tokens_num=len(tokens)
+    win11_tokens_num=len(win11_tokens)
+
+
     #need to transform the data into two dimention array.
     rand_list=create_random_number_range_seqence_lenth_generator(MIN_RAND_VALUE, MAX_RAND_VALUE, tokens_num)
-    
     data_array=gen_2d_array_with_rand_list(tokens, rand_list)
-    
     
     #print(data_array[:10])
     ps = PrefixSpan(data_array)
@@ -444,38 +487,18 @@ def main():
     #print(Result_pattern_list)
     print(len(Result_pattern_list))
     #from string to splited object .e.g: [["1 2 3 4"],["5 6 7 8"]] =>[["1","2","3","4"],["5","6","7","8"]]
-    Result_pattern_list=[l[0].split(" ") for l in Result_pattern_list]
+    Result_pattern_list=[Result_pattern[0].split(" ") for Result_pattern in Result_pattern_list]
     #sort the list, by the first element of each sub-list
     Result_patterns_list= sorted(Result_pattern_list, key=lambda x: x[0])
     print(Result_patterns_list)
 
 
     
-    match_pattern_indexies_range_list=list()
-    match_map=[False for i in range(0,len(tokens))]
-    assert(len(match_map)==len(tokens))
-
-
-
-    #Why we need match map? not just return the range?, because the interval can be merged,
-    #.e.g    [2,1] mean index 2 with 1 length pattern match, but there might have [1,3] 
-    for patterns in Result_patterns_list:
-        patterns_len=len(patterns)
-        #use the first pattern of paterns to look up dictionary.
-        indexies=index_dictionary[patterns[0]]
-        result_match_list=matchIndexAndPattern(indexies, patterns, tokens)
-        for result_index in result_match_list:
-            match_pattern_indexies_range_list.append((result_index, patterns_len))
-    for from_to_tupple in match_pattern_indexies_range_list:
-        (index_from, patterns_len) = from_to_tupple
-        if index_from + patterns_len < len(tokens):
-            for i in range(0, patterns_len):
-                #print(index_from, patterns_len)
-                match_map[index_from+i]=True
-
+    #Create match map
+    win10_match_map=createMatchMap(Result_patterns_list, index_dictionary, tokens)
+    #Use win10 pattern to create the match map for win11
         
-            
-    first_interval_list, first_widths, second_interval_list, second_widths=createIntervalList(match_map)
+    first_interval_list, first_widths, second_interval_list, second_widths=createIntervalList(win10_match_map)
     visualizeResult(first_interval_list, first_widths, second_interval_list, second_widths)
     '''
     patterns_1=Result_patterns_list[0]
