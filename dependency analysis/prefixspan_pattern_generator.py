@@ -13,6 +13,10 @@ import sys
 import os
 import hashlib
 
+import numpy as np
+from matplotlib import colors as mcolors 
+import matplotlib.pyplot as plt
+
 
 
 
@@ -27,6 +31,86 @@ first_pattern_list=[]
 
 
 
+'''
+Description
+
+'''
+def matchIndexAndPattern(_indexies:int, _patterns:str, _tokens):
+    first_pattern=_patterns[0]
+    result_list=[]
+    for index in _indexies:
+        allmatchflag=1
+        for i in range(0, len(_patterns)):
+            if index+len(_patterns) <len(_tokens):
+                if _tokens[index+i]!=_patterns[i]:
+                    allmatchflag=0
+                    break
+            else:
+                break
+        if allmatchflag ==1:
+            result_list.append(index)
+            allmatchflag=1
+    return result_list
+
+'''
+
+Description:
+    create a dictionary that we are able to find all of
+    the positions of certaint pattern 
+
+'''
+def createIndexDictionary(tokens):
+    index_dictionary=dict()
+    indexies=[x for x in range(0, len(tokens))]
+    token_index_pairs=zip(tokens, indexies)
+    for pair in token_index_pairs:
+        (token, index)=pair
+        if token not in index_dictionary:
+            index_dictionary[token]= list()
+            index_dictionary[token].append(index)
+        else:
+            index_dictionary[token].append(index)
+    return index_dictionary
+
+'''
+
+
+'''
+def createIntervalList(match_map):
+    print(match_map)
+    first_interval_list=[]
+    first_widths=[]
+    second_interval_list=[]
+    second_widths=[]
+
+    #append diff flag in the end of map,
+    #so for loop will know when to stop
+
+    match_map.append(not match_map[-1])
+
+    flag=match_map[0]
+    first_interval_list.append(0)#start from 0
+
+
+    count=0
+    for i in range(0, len(match_map)):
+        #there are two conditions while match_map[i] meet differen flag, flag=match_map[0], or not match_map[0]
+        if match_map[i] !=flag:
+            if flag==match_map[0]:
+                if i !=len(match_map)-1:
+                    second_interval_list.append(i)
+                first_widths.append(count)
+                flag=not flag
+                count=1
+            elif flag==(not match_map[0]):
+                if i!=len(match_map)-1:
+                    first_interval_list.append(i)
+                second_widths.append(count)
+                flag=not flag
+                count=1
+        else:
+            count+=1
+    return first_interval_list, first_widths, second_interval_list, second_widths
 '''
 Function Name: 
     create_random_number_range_seqence_lenth_generator(min_v, max_v, token_number)
@@ -119,6 +203,9 @@ def dropDuplicatePatterns(_connection, _first_pattern):
         if hash_of_unique_pattern in hash_UniqueSEQ_and_SEQ_LEN_dict:
             #keep the min(length, oldlength)
             #if old len > new len
+            #==========================================================================
+            # less than greater than is very important, change the symbol here
+            #==========================================================================
             if hash_UniqueSEQ_and_SEQ_LEN_dict[hash_of_unique_pattern]> seq_length:
                 Old_hash=hash_UniqueSEQ_and_hash_OriginSEQ_dict[hash_of_unique_pattern]
                 #remove the old hash 
@@ -246,6 +333,44 @@ def getTheOriginalPatternFromHash(_connection, _Result_hash):
         Result_Original_Patterns_list.append(row)
     return Result_Original_Patterns_list
 
+
+'''
+#Function Name:
+
+
+#Description:
+     Visualize the result
+
+'''
+def visualizeResult(match_interval_start, match_width_list, unmatch_interval_start, unmatch_width_list):
+                     
+    #column_name_set=["unmatch","match","reserve"]
+    column_names=["match","unmatch"]
+
+    labels=["win10"]
+
+    fig, ax = plt.subplots(figsize=(15, 5))
+    ax.invert_yaxis()
+    ax.xaxis.set_visible(False)
+    ax.set_xlim(0, max(match_interval_start))
+
+    color1="#00FFFF"
+    color2="#00008B"
+    rects = ax.barh(labels, match_width_list, left=match_interval_start, height=0.1,
+        label="match", color=color1)
+    rects = ax.barh(labels, unmatch_width_list, left=unmatch_interval_start, height=0.1,
+        label="unmatch", color=color2)
+    '''
+        #show text on the bar
+        text_color = 'white'
+        ax.bar_label(rects, label_type='center', color=text_color)
+    '''
+
+    ax.legend(ncol=len(column_names), bbox_to_anchor=(0, 1),
+                loc='lower left', fontsize='small')
+    plt.show() 
+
+
 #===================================================
 #Function Name:
 #   Main
@@ -264,11 +389,16 @@ def main():
     connection=sqlite3.connect(DATABASE)
     cursor=connection.cursor()
 
-    data=None
-    data=open(WIN10_FILE_NAME_NAME, 'r', encoding='utf-8').read()
-    assert(data is not None)
+    win10data=None
+    win10data=open(WIN10_FILE_NAME_NAME, 'r', encoding='utf-8').read()
+    assert(win10data is not None)
 
-    tokens=data.split()
+    tokens=win10data.split()
+    index_dictionary=createIndexDictionary(tokens)
+
+
+    
+
     tokens_num=len(tokens)
     #need to transform the data into two dimention array.
     rand_list=create_random_number_range_seqence_lenth_generator(MIN_RAND_VALUE, MAX_RAND_VALUE, tokens_num)
@@ -316,8 +446,46 @@ def main():
     #from string to splited object .e.g: [["1 2 3 4"],["5 6 7 8"]] =>[["1","2","3","4"],["5","6","7","8"]]
     Result_pattern_list=[l[0].split(" ") for l in Result_pattern_list]
     #sort the list, by the first element of each sub-list
-    Result_pattern_list= sorted(Result_pattern_list, key=lambda x: x[0])
-    print(Result_pattern_list)
+    Result_patterns_list= sorted(Result_pattern_list, key=lambda x: x[0])
+    print(Result_patterns_list)
 
+
+    
+    match_pattern_indexies_range_list=list()
+    match_map=[False for i in range(0,len(tokens))]
+    assert(len(match_map)==len(tokens))
+
+
+
+    #Why we need match map? not just return the range?, because the interval can be merged,
+    #.e.g    [2,1] mean index 2 with 1 length pattern match, but there might have [1,3] 
+    for patterns in Result_patterns_list:
+        patterns_len=len(patterns)
+        #use the first pattern of paterns to look up dictionary.
+        indexies=index_dictionary[patterns[0]]
+        result_match_list=matchIndexAndPattern(indexies, patterns, tokens)
+        for result_index in result_match_list:
+            match_pattern_indexies_range_list.append((result_index, patterns_len))
+    for from_to_tupple in match_pattern_indexies_range_list:
+        (index_from, patterns_len) = from_to_tupple
+        if index_from + patterns_len < len(tokens):
+            for i in range(0, patterns_len):
+                #print(index_from, patterns_len)
+                match_map[index_from+i]=True
+
+        
+            
+    first_interval_list, first_widths, second_interval_list, second_widths=createIntervalList(match_map)
+    visualizeResult(first_interval_list, first_widths, second_interval_list, second_widths)
+    '''
+    patterns_1=Result_patterns_list[0]
+    indexies=index_dictionary[patterns_1[0]]
+    result_match_list=matchIndexAndPattern(indexies, patterns_1, tokens)
+    print(f"target pattern:{patterns_1}")
+    for i in result_match_list:
+        print(i)               
+        print(tokens[i:i+len(patterns_1)])
+    print(tokens[286542:286576])
+    '''
 if __name__=="__main__":
     main()
