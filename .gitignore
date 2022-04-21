@@ -1,3 +1,4 @@
 **/node_modules
 compare_result.csv
 **/*.db
+**/patterns.txt

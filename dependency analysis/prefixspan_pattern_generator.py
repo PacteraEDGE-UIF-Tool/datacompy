@@ -10,6 +10,8 @@ import traceback
 import sys
 import os
 import hashlib
+import pickle
+
 
 import numpy as np
 from matplotlib import colors as mcolors 
@@ -19,14 +21,15 @@ import matplotlib.pyplot as plt
 
 
 #Global variables
-
-
-WIN10_FILE_NAME=r"E:\experiments\Log_analysis\dependency analysis\cleaned_data_win10.txt"
-WIN11_FILE_NAME=r"E:\experiments\Log_analysis\dependency analysis\cleaned_data_win10.txt"
+USE_SAVED_DATA_MODE=False
+DATASET_PATH=r"C:\Users\sheng\experiments\Log_analysis\dependency analysis"
+WIN10_FILE_NAME=r"cleaned_data_win10.txt"
+WIN11_FILE_NAME=r"cleaned_data_win11.txt"
 MIN_RAND_VALUE=2
 MAX_RAND_VALUE=10
 #the minum threshold for pattern appear time
 PATTERN_NUMBER_THRESHOLD=5
+PREFIX_SPAN_TOPK=7000
 DATABASE="Sqlite3.db"
 filtered_pattern_list=[]
 first_pattern_list=[]
@@ -112,7 +115,11 @@ def createIntervalList(match_map):
                 count=1
         else:
             count+=1
-    return first_interval_list, first_widths, second_interval_list, second_widths
+    #if start with true
+    if match_map[0]:
+        return first_interval_list, first_widths, second_interval_list, second_widths
+    else:
+        return second_interval_list, second_widths, first_interval_list, first_widths
 '''
 Function Name: 
     create_random_number_range_seqence_lenth_generator(min_v, max_v, token_number)
@@ -344,12 +351,23 @@ def getTheOriginalPatternFromHash(_connection, _Result_hash):
      Visualize the result
 
 '''
-def visualizeResult(match_interval_start, match_width_list, unmatch_interval_start, unmatch_width_list):
-                     
+def visualizeResult(dict1, dict2):
+
+    match_interval_start=dict1["match_interval_start"]
+    match_width_list=dict1["match_width_list"] 
+    unmatch_interval_start=dict1["unmatch_interval_start"]
+    unmatch_width_list=dict1["unmatch_width_list"]
+    label1=dict1["label"]
+
+    match_interval_start_2=dict2["match_interval_start"]
+    match_width_list_2=dict2["match_width_list"] 
+    unmatch_interval_start_2=dict2["unmatch_interval_start"]
+    unmatch_width_list_2=dict2["unmatch_width_list"]
+    label2=dict2["label"]
+
+
     #column_name_set=["unmatch","match","reserve"]
     column_names=["match","unmatch"]
-
-    labels=["win10"]
 
     fig, ax = plt.subplots(figsize=(15, 5))
     ax.invert_yaxis()
@@ -358,10 +376,16 @@ def visualizeResult(match_interval_start, match_width_list, unmatch_interval_sta
 
     color1="#00FFFF"
     color2="#00008B"
-    rects = ax.barh(labels, match_width_list, left=match_interval_start, height=0.1,
-        label="match", color=color1)
-    rects = ax.barh(labels, unmatch_width_list, left=unmatch_interval_start, height=0.1,
-        label="unmatch", color=color2)
+    #draw dict 1
+    rects = ax.barh(label1, match_width_list, left=match_interval_start, height=0.1,
+        label="match", color=color2)
+    rects = ax.barh(label1, unmatch_width_list, left=unmatch_interval_start, height=0.1,
+        label="unmatch", color=color1)
+
+    rects=ax.barh(label2, match_width_list_2, left=match_interval_start_2, height=0.1,
+        label="match", color=color2)
+    rects = ax.barh(label2, unmatch_width_list_2, left=unmatch_interval_start_2, height=0.1,
+        label="unmatch", color=color1)
     '''
         #show text on the bar
         text_color = 'white'
@@ -406,26 +430,16 @@ def createMatchMap(Result_patterns_list, index_dictionary, tokens):
 #   program entry
 #===================================================
 def main():
-
-    Result_hash_list=[]
-    Result_pattern_list=[]
-
-    if os.path.isfile(DATABASE):
-        os.remove(DATABASE)
-
-
-    connection=sqlite3.connect(DATABASE)
-    cursor=connection.cursor()
-    
-    
-    
-    #read data
+    Result_patterns_list=[]
+            #read data
     win10data=None
-    win10data=open(WIN10_FILE_NAME, 'r', encoding='utf-8').read()
+    win10_file_path=os.path.join(DATASET_PATH, WIN10_FILE_NAME)
+    win10data=open(win10_file_path, 'r', encoding='utf-8').read()
     assert(win10data is not None)
 
 
     win11data=None
+    win11_file_path=os.path.join(DATASET_PATH, WIN11_FILE_NAME)
     win11data=open(WIN11_FILE_NAME,'r', encoding='utf-8').read()
 
 
@@ -437,69 +451,120 @@ def main():
     #create dictionary return a python dictionary in following form dic{"first_pattern":[1,100,1000...],second_pattern}
     win11_index_dictionary=createIndexDictionary(win11_tokens)
     index_dictionary=createIndexDictionary(tokens)
+    #retrain to get the new pattern again
+    if not USE_SAVED_DATA_MODE:
+        Result_hash_list=[]
+        Result_pattern_list=[]
+
+        if os.path.isfile(DATABASE):
+            os.remove(DATABASE)
 
 
-    
-
-    tokens_num=len(tokens)
-    win11_tokens_num=len(win11_tokens)
-
-
-    #need to transform the data into two dimention array.
-    rand_list=create_random_number_range_seqence_lenth_generator(MIN_RAND_VALUE, MAX_RAND_VALUE, tokens_num)
-    data_array=gen_2d_array_with_rand_list(tokens, rand_list)
-    
-    #print(data_array[:10])
-    ps = PrefixSpan(data_array)
-
-    '''
-    For both frequentcy and top-k algorithms, a custom key function key=lambda patt, matches: ... can be applied,
-    where pattern is the current pattern and matches is the current list of matching sequence (id, position) tuples.
-    '''
-    patterns=ps.topk(6000)
-    for pattern in patterns:
-        #pattern in the form like (24794, ['TlsGetValue_OK'])
-        #if the pattern length> threshold then push it into list
-        #.e.g ['a','b','a','c'] pattern length=4
-        if len(pattern[1])>PATTERN_NUMBER_THRESHOLD:
-            filtered_pattern_list.append(pattern[1])
-
-    #create the data base table
-    createPatternInfoTable(connection)
-
-    #store the first element in pattern
-    #sequential pattern in the following format
-    # .e.g ['CallNextHookEx_OK', 'PeekMessageW_OK', 'DispatchMessageW_*', 'TlsGetValue_OK', 'GetWindowLongW_*', 'GetWindowLongW_OK']
-    print(len(filtered_pattern_list))
-    for sequential_patterns in filtered_pattern_list:
-        insertDataIntoDB(connection, sequential_patterns)
-
-    #drop duplicate pattern
-    for first_pattern in first_pattern_list:
-        _Result_hash_list=dropDuplicatePatterns(connection, first_pattern)
-        Result_hash_list.extend(_Result_hash_list)
-
-    print(Result_hash_list)
-
-    for Result_hash in Result_hash_list:
-        Result_pattern_list.append(getTheOriginalPatternFromHash(connection, Result_hash))
-    
-    #print(Result_pattern_list)
-    print(len(Result_pattern_list))
-    #from string to splited object .e.g: [["1 2 3 4"],["5 6 7 8"]] =>[["1","2","3","4"],["5","6","7","8"]]
-    Result_pattern_list=[Result_pattern[0].split(" ") for Result_pattern in Result_pattern_list]
-    #sort the list, by the first element of each sub-list
-    Result_patterns_list= sorted(Result_pattern_list, key=lambda x: x[0])
-    print(Result_patterns_list)
+        connection=sqlite3.connect(DATABASE)
+        cursor=connection.cursor()
+            
+        tokens_num=len(tokens)
+        win11_tokens_num=len(win11_tokens)
 
 
-    
+        #need to transform the data into two dimention array.
+        rand_list=create_random_number_range_seqence_lenth_generator(MIN_RAND_VALUE, MAX_RAND_VALUE, tokens_num)
+        data_array=gen_2d_array_with_rand_list(tokens, rand_list)
+        
+        #print(data_array[:10])
+        ps = PrefixSpan(data_array)
+
+        '''
+        For both frequentcy and top-k algorithms, a custom key function key=lambda patt, matches: ... can be applied,
+        where pattern is the current pattern and matches is the current list of matching sequence (id, position) tuples.
+        '''
+        patterns=ps.topk(PREFIX_SPAN_TOPK)
+        for pattern in patterns:
+            #pattern in the form like (24794, ['TlsGetValue_OK'])
+            #if the pattern length> threshold then push it into list
+            #.e.g ['a','b','a','c'] pattern length=4
+            if len(pattern[1])>PATTERN_NUMBER_THRESHOLD:
+                filtered_pattern_list.append(pattern[1])
+
+        #create the data base table
+        createPatternInfoTable(connection)
+
+        #store the first element in pattern
+        #sequential pattern in the following format
+        # .e.g ['CallNextHookEx_OK', 'PeekMessageW_OK', 'DispatchMessageW_*', 'TlsGetValue_OK', 'GetWindowLongW_*', 'GetWindowLongW_OK']
+        print(len(filtered_pattern_list))
+        for sequential_patterns in filtered_pattern_list:
+            insertDataIntoDB(connection, sequential_patterns)
+
+        #drop duplicate pattern
+        for first_pattern in first_pattern_list:
+            _Result_hash_list=dropDuplicatePatterns(connection, first_pattern)
+            Result_hash_list.extend(_Result_hash_list)
+
+        print(Result_hash_list)
+
+        for Result_hash in Result_hash_list:
+            Result_pattern_list.append(getTheOriginalPatternFromHash(connection, Result_hash))
+        
+        #print(Result_pattern_list)
+        print(len(Result_pattern_list))
+        #from string to splited object .e.g: [["1 2 3 4"],["5 6 7 8"]] =>[["1","2","3","4"],["5","6","7","8"]]
+        Result_pattern_list=[Result_pattern[0].split(" ") for Result_pattern in Result_pattern_list]
+        #sort the list, by the first element of each sub-list
+        Result_patterns_list= sorted(Result_pattern_list, key=lambda x: x[0])
+        print(Result_patterns_list)
+        with open('outfile', 'wb') as fp:
+            pickle.dump(Result_patterns_list, fp)
+        f=open('patterns.txt','w')
+        f.write("\n".join(str(item) for item in Result_patterns_list))
+
+    else:
+        #if not use save mode, save pattern into 
+        with  open ('outfile', 'rb') as fp:
+            Result_patterns_list = pickle.load(fp)
+
     #Create match map
     win10_match_map=createMatchMap(Result_patterns_list, index_dictionary, tokens)
     #Use win10 pattern to create the match map for win11
+    win11_match_map=createMatchMap(Result_patterns_list, win11_index_dictionary, win11_tokens)
         
-    first_interval_list, first_widths, second_interval_list, second_widths=createIntervalList(win10_match_map)
-    visualizeResult(first_interval_list, first_widths, second_interval_list, second_widths)
+    win10_first_interval_list, win10_first_widths, win10_second_interval_list, win10_second_widths=createIntervalList(win10_match_map)
+    #create dictionary
+    win10_visualize_dict=dict()
+    win10_visualize_dict["label"]="win10"
+    win10_visualize_dict["match_interval_start"]=win10_first_interval_list
+    win10_visualize_dict["match_width_list"]=win10_first_widths
+    win10_visualize_dict["unmatch_interval_start"]=win10_second_interval_list
+    win10_visualize_dict["unmatch_width_list"]=win10_second_widths
+
+
+
+
+    win11_first_interval_list, win11_first_widths, win11_second_interval_list, win11_second_widths=createIntervalList(win11_match_map)
+    #create dictionary
+    win11_visualize_dict=dict()
+    win11_visualize_dict["label"]="win11"
+    win11_visualize_dict["match_interval_start"]=win11_first_interval_list
+    win11_visualize_dict["match_width_list"]=win11_first_widths
+    win11_visualize_dict["unmatch_interval_start"]=win11_second_interval_list
+    win11_visualize_dict["unmatch_width_list"]=win11_second_widths
+
+
+
+
+
+    visualizeResult(win10_visualize_dict, win11_visualize_dict)
+
+    print(win10_first_interval_list[:10])
+    print(win10_first_widths[:10])
+    print(win10_second_interval_list[:10])
+    print(win10_second_widths[:10])
+
+    print(win11_first_interval_list[:10])
+    print(win11_first_widths[:10])
+    print(win11_second_interval_list[:10])
+    print(win11_second_widths[:10])
+
     '''
     patterns_1=Result_patterns_list[0]
     indexies=index_dictionary[patterns_1[0]]
