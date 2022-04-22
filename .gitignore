@@ -2,3 +2,5 @@
 compare_result.csv
 **/*.db
 **/patterns.txt
+**/outfile
+**/splited_dataset/*

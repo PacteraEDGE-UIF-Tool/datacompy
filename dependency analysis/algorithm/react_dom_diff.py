@@ -16,8 +16,11 @@ b=Node("b")
 c=Node("c")
 d=Node("d")
 e=Node("e")
-Before=[a, b, e]
-After=[a, d, b, c]
+z=Node("z")
+y=Node("y")
+g=Node("g")
+Before=[a, b, c,  e]
+After=[a, d, b, c, z, e, y]
 
 
 def main():

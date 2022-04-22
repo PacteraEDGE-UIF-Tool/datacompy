@@ -2,6 +2,7 @@
 
 from encodings import search_function
 from enum import unique
+from fileinput import filename
 from re import S
 from prefixspan import PrefixSpan
 import random
@@ -14,6 +15,9 @@ import pickle
 
 
 import numpy as np
+
+import scipy
+from scipy.signal import savgol_filter
 from matplotlib import colors as mcolors 
 import matplotlib.pyplot as plt
 
@@ -21,7 +25,8 @@ import matplotlib.pyplot as plt
 
 
 #Global variables
-USE_SAVED_DATA_MODE=False
+#False=retrain
+USE_SAVED_DATA_MODE=True
 DATASET_PATH=r"C:\Users\sheng\experiments\Log_analysis\dependency analysis"
 WIN10_FILE_NAME=r"cleaned_data_win10.txt"
 WIN11_FILE_NAME=r"cleaned_data_win11.txt"
@@ -29,12 +34,11 @@ MIN_RAND_VALUE=2
 MAX_RAND_VALUE=10
 #the minum threshold for pattern appear time
 PATTERN_NUMBER_THRESHOLD=5
-PREFIX_SPAN_TOPK=7000
+PREFIX_SPAN_TOPK=10000
 DATABASE="Sqlite3.db"
 filtered_pattern_list=[]
 first_pattern_list=[]
-
-
+SPLITED_DATA_FOLDER_NAME='splited_dataset'
 
 '''
 Description
@@ -406,7 +410,7 @@ def visualizeResult(dict1, dict2):
 def createMatchMap(Result_patterns_list, index_dictionary, tokens):
 
     match_pattern_indexies_range_list=list()
-    match_map=[False for i in range(0,len(tokens))]
+    match_map=[0 for i in range(0,len(tokens))]
     assert(len(match_map)==len(tokens))
 
     for patterns in Result_patterns_list:
@@ -421,7 +425,7 @@ def createMatchMap(Result_patterns_list, index_dictionary, tokens):
         if index_from + patterns_len < len(tokens):
             for i in range(0, patterns_len):
                 #print(index_from, patterns_len)
-                match_map[index_from+i]=True
+                match_map[index_from+i]=1
     return match_map
 #===================================================
 #Function Name:
@@ -444,13 +448,13 @@ def main():
 
 
     #create tokens
-    tokens=win10data.split()
+    win10_tokens=win10data.split()
     win11_tokens=win11data.split()
 
 
     #create dictionary return a python dictionary in following form dic{"first_pattern":[1,100,1000...],second_pattern}
     win11_index_dictionary=createIndexDictionary(win11_tokens)
-    index_dictionary=createIndexDictionary(tokens)
+    win10_index_dictionary=createIndexDictionary(win10_tokens)
     #retrain to get the new pattern again
     if not USE_SAVED_DATA_MODE:
         Result_hash_list=[]
@@ -461,15 +465,18 @@ def main():
 
 
         connection=sqlite3.connect(DATABASE)
-        cursor=connection.cursor()
+        #cursor=connection.cursor()
             
-        tokens_num=len(tokens)
+        win10_tokens_num=len(win10_tokens)
         win11_tokens_num=len(win11_tokens)
+        
+        total_tokens=[*win10_tokens, *win11_tokens]
+        total_tokens_num=len(total_tokens)
 
 
         #need to transform the data into two dimention array.
-        rand_list=create_random_number_range_seqence_lenth_generator(MIN_RAND_VALUE, MAX_RAND_VALUE, tokens_num)
-        data_array=gen_2d_array_with_rand_list(tokens, rand_list)
+        rand_list=create_random_number_range_seqence_lenth_generator(MIN_RAND_VALUE, MAX_RAND_VALUE, total_tokens_num)
+        data_array=gen_2d_array_with_rand_list(total_tokens, rand_list)
         
         #print(data_array[:10])
         ps = PrefixSpan(data_array)
@@ -524,18 +531,36 @@ def main():
             Result_patterns_list = pickle.load(fp)
 
     #Create match map
-    win10_match_map=createMatchMap(Result_patterns_list, index_dictionary, tokens)
+    win10_match_map=createMatchMap(Result_patterns_list, win10_index_dictionary, win10_tokens)
     #Use win10 pattern to create the match map for win11
     win11_match_map=createMatchMap(Result_patterns_list, win11_index_dictionary, win11_tokens)
-        
+
+    #noise filter
+    win11_match_map=  scipy.signal.savgol_filter(win11_match_map, 100, 1)
+    for i in win11_match_map:
+        print(i)
+    #print(win11_match_map)
+
     win10_first_interval_list, win10_first_widths, win10_second_interval_list, win10_second_widths=createIntervalList(win10_match_map)
-    #create dictionary
+    win10_match_interval_list=[]
+    win10_widths_list=[]
+    win10_unmatch_interval_list=[]
+    win10_unmatch_width_list=[]
+
     win10_visualize_dict=dict()
     win10_visualize_dict["label"]="win10"
-    win10_visualize_dict["match_interval_start"]=win10_first_interval_list
-    win10_visualize_dict["match_width_list"]=win10_first_widths
-    win10_visualize_dict["unmatch_interval_start"]=win10_second_interval_list
-    win10_visualize_dict["unmatch_width_list"]=win10_second_widths
+    if win10_match_map[0]==False:
+        #create dictionary
+
+        win10_visualize_dict["match_interval_start"]=win10_first_interval_list
+        win10_visualize_dict["match_width_list"]=win10_first_widths
+        win10_visualize_dict["unmatch_interval_start"]=win10_second_interval_list
+        win10_visualize_dict["unmatch_width_list"]=win10_second_widths
+    else:
+        win10_visualize_dict["match_interval_start"]=win10_second_interval_list
+        win10_visualize_dict["match_width_list"]=win10_second_widths
+        win10_visualize_dict["unmatch_interval_start"]=win10_first_interval_list
+        win10_visualize_dict["unmatch_width_list"]=win10_first_widths
 
 
 
@@ -544,13 +569,16 @@ def main():
     #create dictionary
     win11_visualize_dict=dict()
     win11_visualize_dict["label"]="win11"
-    win11_visualize_dict["match_interval_start"]=win11_first_interval_list
-    win11_visualize_dict["match_width_list"]=win11_first_widths
-    win11_visualize_dict["unmatch_interval_start"]=win11_second_interval_list
-    win11_visualize_dict["unmatch_width_list"]=win11_second_widths
-
-
-
+    if win11_match_map[0]==False:
+        win11_visualize_dict["match_interval_start"]=win11_first_interval_list
+        win11_visualize_dict["match_width_list"]=win11_first_widths
+        win11_visualize_dict["unmatch_interval_start"]=win11_second_interval_list
+        win11_visualize_dict["unmatch_width_list"]=win11_second_widths
+    else:
+        win11_visualize_dict["match_interval_start"]=win11_second_interval_list
+        win11_visualize_dict["match_width_list"]=win11_second_widths
+        win11_visualize_dict["unmatch_interval_start"]=win11_first_interval_list
+        win11_visualize_dict["unmatch_width_list"]=win11_first_widths
 
 
     visualizeResult(win10_visualize_dict, win11_visualize_dict)
@@ -564,6 +592,35 @@ def main():
     print(win11_first_widths[:10])
     print(win11_second_interval_list[:10])
     print(win11_second_widths[:10])
+
+
+    #split dataset by chateristics
+    current_path= os.getcwd()
+    storage_path=os.path.join(current_path, SPLITED_DATA_FOLDER_NAME)
+
+    #clean the folder first
+    floder = SPLITED_DATA_FOLDER_NAME
+    for root, dirs, files in os.walk(floder):
+        for file in files:
+            os.remove(os.path.join(root, file))
+    for i in range(10):
+        start= win11_second_interval_list[i]
+        length=win11_second_widths[i]
+        file_name=str(i)+"_"+"win11_"+str(start)+"_"+str(length)+".txt"
+        full_file_path=os.path.join(storage_path, file_name)
+        with open(full_file_path, "w+") as f:
+            f.write(  "\n".join(  str(item) for item in win11_tokens[start:start+length]))
+
+    for i in range(10):
+        start= win10_second_interval_list[i]
+        length=win10_second_widths[i]
+        file_name=str(i)+"_""win10_"+str(start)+"_"+str(length)+".txt"
+        full_file_path=os.path.join(storage_path, file_name)
+        with open(full_file_path, "w+") as f:
+            f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
+
+
+
 
     '''
     patterns_1=Result_patterns_list[0]
