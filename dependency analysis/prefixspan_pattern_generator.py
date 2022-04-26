@@ -23,10 +23,9 @@ import matplotlib.pyplot as plt
 
 
 
-
 #Global variables
 #False=retrain
-USE_SAVED_DATA_MODE=True
+USE_SAVED_DATA_MODE=False
 DATASET_PATH=r"C:\Users\sheng\experiments\Log_analysis\dependency analysis"
 WIN10_FILE_NAME=r"cleaned_data_win10.txt"
 WIN11_FILE_NAME=r"cleaned_data_win11.txt"
@@ -96,7 +95,6 @@ def createIntervalList(match_map):
     #so for loop will know when to stop
 
     match_map.append(not match_map[-1])
-
     flag=match_map[0]
     first_interval_list.append(0)#start from 0
 
@@ -444,7 +442,7 @@ def main():
 
     win11data=None
     win11_file_path=os.path.join(DATASET_PATH, WIN11_FILE_NAME)
-    win11data=open(WIN11_FILE_NAME,'r', encoding='utf-8').read()
+    win11data=open(win11_file_path, 'r', encoding='utf-8').read()
 
 
     #create tokens
@@ -520,14 +518,14 @@ def main():
         #sort the list, by the first element of each sub-list
         Result_patterns_list= sorted(Result_pattern_list, key=lambda x: x[0])
         print(Result_patterns_list)
-        with open('outfile', 'wb') as fp:
+        with open('Result_pattern_list.pickle', 'wb+') as fp:
             pickle.dump(Result_patterns_list, fp)
         f=open('patterns.txt','w')
         f.write("\n".join(str(item) for item in Result_patterns_list))
 
     else:
         #if not use save mode, save pattern into 
-        with  open ('outfile', 'rb') as fp:
+        with  open ('Result_pattern_list.pickle', 'rb') as fp:
             Result_patterns_list = pickle.load(fp)
 
     #Create match map
@@ -535,11 +533,7 @@ def main():
     #Use win10 pattern to create the match map for win11
     win11_match_map=createMatchMap(Result_patterns_list, win11_index_dictionary, win11_tokens)
 
-    #noise filter
-    win11_match_map=  scipy.signal.savgol_filter(win11_match_map, 100, 1)
-    for i in win11_match_map:
-        print(i)
-    #print(win11_match_map)
+
 
     win10_first_interval_list, win10_first_widths, win10_second_interval_list, win10_second_widths=createIntervalList(win10_match_map)
     win10_match_interval_list=[]
@@ -618,6 +612,28 @@ def main():
         full_file_path=os.path.join(storage_path, file_name)
         with open(full_file_path, "w+") as f:
             f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
+
+
+        with open('win10_first_interval_list.pickle', 'wb+') as fp:
+            pickle.dump(win10_first_interval_list, fp)
+        with open('win10_second_interval_list.pickle', "wb+") as fp:
+            pickle.dump(win10_second_interval_list, fp)
+        with open('win10_first_widths.pickle', 'wb+') as fp:
+            pickle.dump(win10_first_widths, fp)
+        with open('win10_second_widths.pickle', "wb+") as fp:
+            pickle.dump(win10_second_widths, fp)
+
+        with open('win11_first_interval_list.pickle', 'wb+') as fp:
+            pickle.dump(win11_first_interval_list, fp)
+        with open('win11_second_interval_list.pickle', "wb+") as fp:
+            pickle.dump(win11_second_interval_list, fp)
+        with open('win11_first_widths.pickle', 'wb+') as fp:
+            pickle.dump(win11_first_widths, fp)
+        with open('win11_second_widths.pickle', "wb+") as fp:
+            pickle.dump(win11_second_widths, fp)
+        
+
+
 
 
 

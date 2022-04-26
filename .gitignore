@@ -4,3 +4,4 @@ compare_result.csv
 **/patterns.txt
 **/outfile
 **/splited_dataset/*
+**/*.pickle
