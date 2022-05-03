@@ -1,0 +1,36 @@
+    QWidget {
+        background-color: #282734;
+        color: "white";
+    }
+    QPushButton {
+        padding: 6px 14px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+        border-radius: 6px;
+        border: none;
+        background: #6E6D70;
+        color: #DFDEDF;
+    }
+    QLineEdit {
+        background-color: "white";
+        color: "black";
+    }
+
+QPushButton:focus {
+  outline: 0;
+}
+QPushButton:hover {
+  background: #7D7E81;
+  outline: 0;
+}
+QTreeView {
+  border: none;
+  background:#404040;
+}
+QHeaderView::section {
+   background-color:#282734;
+
+  }
+QTreeView::branch:selected {
+  background-color: #547cc5;
+  border: 1px solid #4e78a1;
+}

@@ -5,3 +5,7 @@ compare_result.csv
 **/outfile
 **/splited_dataset/*
 **/*.pickle
+**/qt
+**/qt/*
+**/*.pyc
+**/*.txt

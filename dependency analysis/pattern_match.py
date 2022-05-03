@@ -3,6 +3,9 @@ import pickle
 import os
 import copy
 SPLITED_DATA_FOLDER_NAME='splited_dataset'
+PATTERN_DATA_FOLDER_NAME='patterns_dataset'
+
+
 DATASET_PATH=r"C:\Users\sheng\experiments\Log_analysis\dependency analysis"
 WIN10_FILE_NAME=r"cleaned_data_win10.txt"
 WIN11_FILE_NAME=r"cleaned_data_win11.txt"
@@ -112,8 +115,16 @@ for root, dirs, files in os.walk(floder):
     for file in files:
         os.remove(os.path.join(root, file))
 
+floder = PATTERN_DATA_FOLDER_NAME
+current_path= os.getcwd()
+patterns_path=os.path.join(current_path,  PATTERN_DATA_FOLDER_NAME)
+for root, dirs, files in os.walk(floder):
+    for file in files:
+        os.remove(os.path.join(root, file))
 
-for i in range(1000):
+number=500
+#gen unmatch datas
+for i in range(number):
     start= win11_second_interval_list[i]
     length=win11_second_widths[i]
     file_name=str(i)+"_"+"win11_"+str(start)+"_"+str(length)+".txt"
@@ -121,10 +132,28 @@ for i in range(1000):
     with open(full_file_path, "w+") as f:
         f.write(  "\n".join(  str(item) for item in win11_tokens[start:start+length]))
 
-for i in range(1000):
+for i in range(number):
     start= win10_second_interval_list[i]
     length=win10_second_widths[i]
     file_name=str(i)+"_""win10_"+str(start)+"_"+str(length)+".txt"
     full_file_path=os.path.join(storage_path, file_name)
     with open(full_file_path, "w+") as f:
         f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
+
+#gen patterns
+for i in range(number):
+    start= win11_first_interval_list[i]
+    length=win11_first_widths[i]
+    file_name=str(i)+"_Patterns"+"_"+"win11_"+str(start)+"_"+str(length)+".txt"
+    full_file_path=os.path.join(patterns_path, file_name)
+    with open(full_file_path, "w+") as f:
+        f.write(  "\n".join(  str(item) for item in win11_tokens[start:start+length]))
+
+for i in range(number):
+    start= win10_first_interval_list[i]
+    length=win10_first_widths[i]
+    file_name=str(i)+"_Patterns"+"_""win10_"+str(start)+"_"+str(length)+".txt"
+    full_file_path=os.path.join(patterns_path, file_name)
+    with open(full_file_path, "w+") as f:
+        f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
+
