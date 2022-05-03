@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from email.policy import default
+
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from mainwindowgui import Ui_MainWindow
@@ -42,11 +42,20 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
             self.current_path,"All files (*.*)")[0]
         self.label_2.setText(self.second_fname)
         self.label_2.adjustSize()
+
+
+
+
     def actionBtnNextClicked(self):
-        index=self.model.index(self.defualt_dataset_path)
+        index=self.model.index(0,0, self.model.index(self.OutputFloder))
         self.treeView.selectionModel().select( #programmatical selection---------
             index,
-            QtCore.QItemSelectionModel.SelectionFlag.Select)
+            QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
+        index2=self.model.index(3,0, self.model.index(self.OutputFloder))
+        self.treeView.selectionModel().select( #programmatical selection---------
+            index2,
+            QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
+        print("clicked")
 
     def actionBtnOutputFloderClicked(self):
         self.OutputFloder=QFileDialog.getExistingDirectory(

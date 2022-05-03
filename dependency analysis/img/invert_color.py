@@ -18,14 +18,17 @@ def convert(filename):
 
         final_transparent_image.save(new_file_name)
 
-#    else:
-#        inverted_image = PIL.ImageOps.invert(image)
-#        inverted_image.save(new_file_name)
+    else:
+        inverted_image = PIL.ImageOps.invert(image)
+        inverted_image.save(new_file_name)
 
 
 file_names=glob.glob('*.png')
+'''
 print(file_names)
 for file in file_names:
     convert(file)
+'''
+convert("toggle_off.png")
 
 

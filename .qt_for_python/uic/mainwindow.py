@@ -16,10 +16,10 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
-    QMainWindow, QMenu, QMenuBar, QPushButton,
-    QSizePolicy, QStatusBar, QToolBar, QTreeView,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QHBoxLayout, QHeaderView,
+    QLabel, QMainWindow, QMenu, QMenuBar,
+    QPushButton, QSizePolicy, QStatusBar, QToolBar,
+    QTreeView, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -70,6 +70,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.pushButton_5 = QPushButton(self.verticalLayoutWidget_3)
         self.pushButton_5.setObjectName(u"pushButton_5")
+        font = QFont()
+        font.setFamilies([u"Roboto Bk"])
+        self.pushButton_5.setFont(font)
 
         self.verticalLayout_3.addWidget(self.pushButton_5)
 
@@ -80,6 +83,7 @@ class Ui_MainWindow(object):
 
         self.pushButton_6 = QPushButton(self.verticalLayoutWidget_3)
         self.pushButton_6.setObjectName(u"pushButton_6")
+        self.pushButton_6.setFont(font)
 
         self.verticalLayout_3.addWidget(self.pushButton_6)
 
@@ -98,6 +102,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.pushButton_7 = QPushButton(self.verticalLayoutWidget_3)
         self.pushButton_7.setObjectName(u"pushButton_7")
+        self.pushButton_7.setFont(font)
 
         self.horizontalLayout_3.addWidget(self.pushButton_7)
 
@@ -115,11 +120,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.pushButton_3 = QPushButton(self.verticalLayoutWidget_3)
         self.pushButton_3.setObjectName(u"pushButton_3")
+        self.pushButton_3.setFont(font)
 
         self.horizontalLayout.addWidget(self.pushButton_3)
 
         self.pushButton_2 = QPushButton(self.verticalLayoutWidget_3)
         self.pushButton_2.setObjectName(u"pushButton_2")
+        self.pushButton_2.setFont(font)
 
         self.horizontalLayout.addWidget(self.pushButton_2)
 
@@ -136,18 +143,28 @@ class Ui_MainWindow(object):
 
         self.pushButton = QPushButton(self.verticalLayoutWidget_3)
         self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setFont(font)
 
         self.verticalLayout_4.addWidget(self.pushButton)
 
+        self.checkBox = QCheckBox(self.verticalLayoutWidget_3)
+        self.checkBox.setObjectName(u"checkBox")
+
+        self.verticalLayout_4.addWidget(self.checkBox)
+
         self.pushButton_4 = QPushButton(self.verticalLayoutWidget_3)
         self.pushButton_4.setObjectName(u"pushButton_4")
+        font1 = QFont()
+        font1.setFamilies([u"Roboto Bk"])
+        font1.setBold(False)
+        self.pushButton_4.setFont(font1)
 
         self.verticalLayout_4.addWidget(self.pushButton_4)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 958, 26))
+        self.menubar.setGeometry(QRect(0, 0, 958, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MainWindow.setMenuBar(self.menubar)
@@ -205,6 +222,7 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Go to previous", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Conduct seperation process", None))
+        self.checkBox.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
         self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"Check the splited file pair", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
