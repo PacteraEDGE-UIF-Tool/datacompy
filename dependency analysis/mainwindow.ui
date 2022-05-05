@@ -111,18 +111,6 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QPushButton" name="pushButton_3">
-           <property name="font">
-            <font>
-             <family>Roboto Bk</family>
-            </font>
-           </property>
-           <property name="text">
-            <string>Go to next</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="pushButton_2">
            <property name="font">
             <font>
@@ -131,6 +119,18 @@
            </property>
            <property name="text">
             <string>Go to previous</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_3">
+           <property name="font">
+            <font>
+             <family>Roboto Bk</family>
+            </font>
+           </property>
+           <property name="text">
+            <string>Go to next</string>
            </property>
           </widget>
          </item>

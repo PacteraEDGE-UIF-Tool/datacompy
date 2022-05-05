@@ -47,15 +47,34 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
 
 
     def actionBtnNextClicked(self):
-        index=self.model.index(0,0, self.model.index(self.OutputFloder))
-        self.treeView.selectionModel().select( #programmatical selection---------
+
+        if self.SelectCount>self.DataLimitCount:
+            self.SelectCount=self.DataLimitCount
+        index=self.model.index(self.SelectCount*2,0, self.model.index(self.OutputFloder))
+         #programmatical selection
+        self.treeView.selectionModel().select(
             index,
-            QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
-        index2=self.model.index(3,0, self.model.index(self.OutputFloder))
-        self.treeView.selectionModel().select( #programmatical selection---------
+            QtCore.QItemSelectionModel.SelectionFlag.ClearAndSelect | QtCore.QItemSelectionModel.SelectionFlag.Rows)
+        index2=self.model.index(self.SelectCount*2+1,0, self.model.index(self.OutputFloder))
+        self.treeView.selectionModel().select( 
             index2,
             QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
-        print("clicked")
+        self.SelectCount+=1
+
+
+    def actionBtnPreviousClicked(self):
+        if self.SelectCount<0:
+            self.SelectCount=0
+        index=self.model.index(self.SelectCount*2,0, self.model.index(self.OutputFloder))
+        self.treeView.selectionModel().select( #programmatical selection---------
+            index,
+            QtCore.QItemSelectionModel.SelectionFlag.ClearAndSelect | QtCore.QItemSelectionModel.SelectionFlag.Rows)
+        index2=self.model.index(self.SelectCount*2+1,0, self.model.index(self.OutputFloder))
+        self.treeView.selectionModel().select( 
+            index2,
+            QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
+        self.SelectCount-=1
+        
 
     def actionBtnOutputFloderClicked(self):
         self.OutputFloder=QFileDialog.getExistingDirectory(
@@ -69,10 +88,18 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
     
 
     def setupUIFunctionalities(self):
+        #=======================================
         #Initialize some variables
+        #=======================================
         self.current_path= os.path.dirname(os.path.abspath(__file__))
         self.defualt_dataset_path=os.path.join(self.current_path, "splited_dataset")
         self.OutputFloder=self.defualt_dataset_path
+
+        #the counter for go to next button
+        self.SelectCount=0
+        self.DataLimitCount=100
+
+
         #check whether the output folder exists
         if not os.path.isdir(self.defualt_dataset_path):
             os.mkdir(self.defualt_dataset_path)
@@ -98,6 +125,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_6.clicked.connect(self.actionBtnSelectFile2Clicked)
         self.pushButton_7.clicked.connect(self.actionBtnOutputFloderClicked)
         self.pushButton_3.clicked.connect(self.actionBtnNextClicked)
+        self.pushButton_2.clicked.connect(self.actionBtnPreviousClicked)
 
     def __init__(self):
         super().__init__()

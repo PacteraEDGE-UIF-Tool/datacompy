@@ -118,17 +118,17 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.pushButton_3 = QPushButton(self.verticalLayoutWidget_3)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setFont(font)
-
-        self.horizontalLayout.addWidget(self.pushButton_3)
-
         self.pushButton_2 = QPushButton(self.verticalLayoutWidget_3)
         self.pushButton_2.setObjectName(u"pushButton_2")
         self.pushButton_2.setFont(font)
 
         self.horizontalLayout.addWidget(self.pushButton_2)
+
+        self.pushButton_3 = QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+        self.pushButton_3.setFont(font)
+
+        self.horizontalLayout.addWidget(self.pushButton_3)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -218,8 +218,8 @@ class Ui_MainWindow(object):
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"file name 2", None))
         self.pushButton_7.setText(QCoreApplication.translate("MainWindow", u"Select output folder", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Default is \"./splited_dataset\"", None))
-        self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"Go to next", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Go to previous", None))
+        self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"Go to next", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Conduct seperation process", None))
         self.checkBox.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
