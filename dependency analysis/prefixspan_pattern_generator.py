@@ -425,6 +425,44 @@ def createMatchMap(Result_patterns_list, index_dictionary, tokens):
                 #print(index_from, patterns_len)
                 match_map[index_from+i]=1
     return match_map
+
+
+def split_dataset(number=500, dict1, dict2):
+    #gen unmatch datas
+    for i in range(number):
+        start= win11_second_interval_list[i]
+        length=win11_second_widths[i]
+        file_name=str(i)+"_"+"win11_"+str(start)+"_"+str(length)+".txt"
+        full_file_path=os.path.join(storage_path, file_name)
+        with open(full_file_path, "w+") as f:
+            f.write(  "\n".join(  str(item) for item in win11_tokens[start:start+length]))
+
+    for i in range(number):
+        start= win10_second_interval_list[i]
+        length=win10_second_widths[i]
+        file_name=str(i)+"_""win10_"+str(start)+"_"+str(length)+".txt"
+        full_file_path=os.path.join(storage_path, file_name)
+        with open(full_file_path, "w+") as f:
+            f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
+
+    #gen patterns
+    for i in range(number):
+        start= win11_first_interval_list[i]
+        length=win11_first_widths[i]
+        file_name=str(i)+"_Patterns"+"_"+"win11_"+str(start)+"_"+str(length)+".txt"
+        full_file_path=os.path.join(patterns_path, file_name)
+        with open(full_file_path, "w+") as f:
+            f.write(  "\n".join(  str(item) for item in win11_tokens[start:start+length]))
+
+    for i in range(number):
+        start= win10_first_interval_list[i]
+        length=win10_first_widths[i]
+        file_name=str(i)+"_Patterns"+"_""win10_"+str(start)+"_"+str(length)+".txt"
+        full_file_path=os.path.join(patterns_path, file_name)
+        with open(full_file_path, "w+") as f:
+            f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
+
+
 #===================================================
 #Function Name:
 #   Main
@@ -632,12 +670,6 @@ def main():
         with open('win11_second_widths.pickle', "wb+") as fp:
             pickle.dump(win11_second_widths, fp)
         
-
-
-
-
-
-
     '''
     patterns_1=Result_patterns_list[0]
     indexies=index_dictionary[patterns_1[0]]

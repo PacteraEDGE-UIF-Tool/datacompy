@@ -10,6 +10,8 @@ import traceback
 import hashlib
 import pickle
 import json
+
+from matplotlib.pyplot import connect
 SPLITED_DATA_FOLDER_NAME='splited_dataset'
 PATTERN_DATA_FOLDER_NAME='patterns_dataset'
 DATABASE="Sqlite3.db"
@@ -71,7 +73,7 @@ def md5hash(string:str):
     return md5.hexdigest()
       
 def insertDataIntoDB(_connection, patterns, index, first_or_second):
-    
+    assert(first_or_second=="first" or first_or_second=="second")
     cursor=_connection.cursor()  
     concat_patterns=(" ").join(patterns)
     hash_of_pattern=md5hash(concat_patterns)
@@ -82,8 +84,7 @@ def insertDataIntoDB(_connection, patterns, index, first_or_second):
                 Index_of_pattern INT VALUES(
         \'{hash_of_pattern}\',
         \'{concat_patterns}\'
-        \'\'
-
+        \'{index}\'
         );
         """
     #print(SQL_INSERT_DATA_SRT)
@@ -207,9 +208,15 @@ for i, pattern_width in enumerate(win11_first_widths):
     win11_pattern=get_ith_pattern(i, win11_first_interval_list, win11_first_widths, win11_tokens)
     compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
     comp_result=compare(win10_pattern, win11_pattern)
+    #no matter what win11 pattern is, store it into database
+    insertDataIntoDB(connection, win11_pattern, i, "second")
     if comp_result==False:
         print(i)
-
+        #insert unmatch win10 pattern into database
+        insertDataIntoDB(connection, win10_pattern, i, "first")
+        unmatch_list.push( md5hash((" ").joi(win10_pattern)))
+for unmatch_hash in unmatch_list:
+    #try to find the 
 
 
 

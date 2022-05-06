@@ -9,3 +9,4 @@ compare_result.csv
 **/qt/*
 **/*.pyc
 **/*.txt
+**/pattern_match copy.py

@@ -11,27 +11,41 @@ from PyQt6.QtGui import QFileSystemModel
 from PyQt6.QtCore import QDir
 from PyQt6.QtCore import QItemSelectionModel, QItemSelection
 from PyQt6 import QtCore
-from PyQt6 import QtGui
+from PyQt6 import QtGui,uic
+import glob
+from PyQt6.QtWidgets import QTableWidgetItem
 FILE_PATH=r"C:\Users\sheng\experiments\Log Info\DIE_log"
 class CMainWindow(QMainWindow, Ui_MainWindow):
-    def actionButton1Clicked(self):
+
+    def actionBtnCompPairClicked(self):
         fp=os.path.join(FILE_PATH, "DIE_win10_.csv")
         table1_column_names=pd.read_csv(fp, index_col=0, nrows=0).columns.tolist()
-
+        table2_column_names=table1_column_names
+        data_left_name= os.path.join(self.OutputFloder ,str(self.SelectCount)+"_win10*")
+        data_right_name=os.path.join(self.OutputFloder, str(self.SelectCount)+"_win11*")
+        data_left=open(glob.glob(data_left_name)[0],"r").read()
+        data_right=open(glob.glob(data_right_name)[0], "r").read()
         self.ResultWindow = QtWidgets.QWidget()
-        self.ResultUI = CResultWindow(
-            table1_column_names=table1_column_names)
+        self.ResultUI= CResultWindow(
+            table1_column_names=table1_column_names,
+            table2_column_names=table2_column_names,
+            data_right=data_right,
+            data_left=data_left
+             )
         self.ResultUI.setupUi(self.ResultWindow)
         self.ResultWindow.show()
+        
+
     def actionTreeClicked(self, Qmodelidx):
         print(self.model.filePath(Qmodelidx))
         print(self.model.fileName(Qmodelidx))
         print(self.model.fileInfo(Qmodelidx))
 
     def actionBtnSelectFile1Clicked(self):
-        self.first_fname = QFileDialog.getOpenFileName(
+        filename=QFileDialog.getOpenFileName(
             self, 'Open file', 
-            self.current_path,"All files (*.*)")[0]
+            self.current_path,"All files (*.*)"
+            )[0]
         self.label.setText(self.first_fname)
         self.label.adjustSize()
         
@@ -90,6 +104,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         "Open a folder",
         self.current_path
     )
+        print(self.OutputFloder)
         self.label_4.setText(self.OutputFloder)
         self.treeView.setRootIndex(self.model.index(self.OutputFloder))
 
@@ -136,7 +151,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         
 
         #add action to show splited file result
-        self.pushButton.clicked.connect(self.actionButton1Clicked)
+        self.pushButton_4.clicked.connect(self.actionBtnCompPairClicked)
         self.pushButton_5.clicked.connect(self.actionBtnSelectFile1Clicked)
         self.pushButton_6.clicked.connect(self.actionBtnSelectFile2Clicked)
         self.pushButton_7.clicked.connect(self.actionBtnOutputFloderClicked)
@@ -145,7 +160,9 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         super().__init__()
+        
         self.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon(os.path.join(__file__, "./img/diff.png")))
         self.setupUIFunctionalities()
         self.show()
         #QMainWindow.__init__(self)
