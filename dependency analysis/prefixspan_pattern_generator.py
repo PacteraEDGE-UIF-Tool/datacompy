@@ -33,7 +33,7 @@ MIN_RAND_VALUE=2
 MAX_RAND_VALUE=10
 #the minum threshold for pattern appear time
 PATTERN_NUMBER_THRESHOLD=5
-PREFIX_SPAN_TOPK=10000
+PREFIX_SPAN_TOPK=5000
 DATABASE="Sqlite3.db"
 filtered_pattern_list=[]
 first_pattern_list=[]
@@ -468,13 +468,13 @@ def main():
         win10_tokens_num=len(win10_tokens)
         win11_tokens_num=len(win11_tokens)
         
-        total_tokens=[*win10_tokens, *win11_tokens]
-        total_tokens_num=len(total_tokens)
+        #total_tokens=[*win10_tokens, *win11_tokens]
+        #total_tokens_num=len(total_tokens)
 
 
         #need to transform the data into two dimention array.
-        rand_list=create_random_number_range_seqence_lenth_generator(MIN_RAND_VALUE, MAX_RAND_VALUE, total_tokens_num)
-        data_array=gen_2d_array_with_rand_list(total_tokens, rand_list)
+        rand_list=create_random_number_range_seqence_lenth_generator(MIN_RAND_VALUE, MAX_RAND_VALUE, win10_tokens_num)
+        data_array=gen_2d_array_with_rand_list(win10_tokens, rand_list)
         
         #print(data_array[:10])
         ps = PrefixSpan(data_array)
@@ -485,8 +485,8 @@ def main():
         '''
         patterns=ps.topk(PREFIX_SPAN_TOPK)
         for pattern in patterns:
-            #pattern in the form like (24794, ['TlsGetValue_OK'])
-            #if the pattern length> threshold then push it into list
+            #pattern in the form like (24794, ['TlsGetValue_OK','TlsGetValue_OK','TlsGetValue_OK'])
+            #if the patterns length> threshold then push it into list
             #.e.g ['a','b','a','c'] pattern length=4
             if len(pattern[1])>PATTERN_NUMBER_THRESHOLD:
                 filtered_pattern_list.append(pattern[1])

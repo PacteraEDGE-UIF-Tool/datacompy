@@ -47,9 +47,13 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
 
 
     def actionBtnNextClicked(self):
-
-        if self.SelectCount>self.DataLimitCount:
+        if self.SelectCount+1>self.DataLimitCount:
             self.SelectCount=self.DataLimitCount
+        else:
+            self.SelectCount+=1
+        print(self.SelectCount)
+        
+
         index=self.model.index(self.SelectCount*2,0, self.model.index(self.OutputFloder))
          #programmatical selection
         self.treeView.selectionModel().select(
@@ -59,12 +63,15 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.treeView.selectionModel().select( 
             index2,
             QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
-        self.SelectCount+=1
+
 
 
     def actionBtnPreviousClicked(self):
-        if self.SelectCount<0:
+
+        if self.SelectCount-1<0:
             self.SelectCount=0
+        else:
+            self.SelectCount-=1
         index=self.model.index(self.SelectCount*2,0, self.model.index(self.OutputFloder))
         self.treeView.selectionModel().select( #programmatical selection---------
             index,
@@ -73,7 +80,8 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.treeView.selectionModel().select( 
             index2,
             QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
-        self.SelectCount-=1
+        print(self.SelectCount)
+        
         
 
     def actionBtnOutputFloderClicked(self):
@@ -115,7 +123,15 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.treeView.setIndentation(10)
         self.treeView.setRootIndex(self.model.index(self.defualt_dataset_path))
         self.treeView.setWindowTitle("Splited file dataset")
-        
+        #initailize the treeview select
+        index=self.model.index(0,0, self.model.index(self.OutputFloder))
+        self.treeView.selectionModel().select(
+            index,
+            QtCore.QItemSelectionModel.SelectionFlag.ClearAndSelect | QtCore.QItemSelectionModel.SelectionFlag.Rows)
+        index2=self.model.index(1,0, self.model.index(self.OutputFloder))
+        self.treeView.selectionModel().select( 
+            index2,
+         QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
 
         
 

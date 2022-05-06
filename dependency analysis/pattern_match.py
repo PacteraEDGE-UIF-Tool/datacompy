@@ -1,9 +1,102 @@
 
+from compileall import compile_path
 import pickle
 import os
 import copy
+import collections
+import sqlite3
+import sys
+import traceback
+import hashlib
+import pickle
+import json
 SPLITED_DATA_FOLDER_NAME='splited_dataset'
 PATTERN_DATA_FOLDER_NAME='patterns_dataset'
+DATABASE="Sqlite3.db"
+
+
+def get_ith_pattern(i, interval_list, width_list, tokens):
+    pattern_start=interval_list[i]
+    pattern_width=width_list[i]
+    pattern_end=pattern_start+pattern_width
+    pattern=tokens[pattern_start+i: pattern_end]
+    return pattern
+
+
+
+def createUnMatchPatternHashTable1(_connection):
+        #Create Sqlite table
+    cursor=_connection.cursor()
+    try:
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS Optimize_pattern_first(
+                Hash_of_patterns TEXT PRIMARY KEY,
+                Patterns TEXT,
+                Index_of_pattern INT
+            );
+        """)
+        _connection.commit()
+    except sqlite3.Error as er:
+        print('SQLite error: %s' % (' '.join(er.args)))
+        print("Exception class is: ", er.__class__)
+        print('SQLite traceback: ')
+        exc_type, exc_value, exc_tb = sys.exc_info()
+        print(traceback.format_exception(exc_type, exc_value, exc_tb))
+        _connection.close()
+
+def createUnMatchPatternHashTable2(_connection):
+        #Create Sqlite table
+    cursor=_connection.cursor()
+    try:
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS Optimize_pattern_second(
+                Hash_of_patterns TEXT PRIMARY KEY,
+                Patterns TEXT,
+                Index_of_pattern INT
+            );
+        """)
+        _connection.commit()
+    except sqlite3.Error as er:
+        print('SQLite error: %s' % (' '.join(er.args)))
+        print("Exception class is: ", er.__class__)
+        print('SQLite traceback: ')
+        exc_type, exc_value, exc_tb = sys.exc_info()
+        print(traceback.format_exception(exc_type, exc_value, exc_tb))
+        _connection.close()
+
+def md5hash(string:str):
+    md5 = hashlib.md5()
+    encodestring=string.encode("utf-8")
+    md5.update(encodestring)
+    return md5.hexdigest()
+      
+def insertDataIntoDB(_connection, patterns, index, first_or_second):
+    
+    cursor=_connection.cursor()  
+    concat_patterns=(" ").join(patterns)
+    hash_of_pattern=md5hash(concat_patterns)
+    SQL_INSERT_DATA_SRT=f"""
+    INSERT INTO {"Optimize_pattern_"+first_or_second} (
+                Hash_of_patterns TEXT PRIMARY KEY,
+                Patterns TEXT,
+                Index_of_pattern INT VALUES(
+        \'{hash_of_pattern}\',
+        \'{concat_patterns}\'
+        \'\'
+
+        );
+        """
+    #print(SQL_INSERT_DATA_SRT)
+    try:
+        cursor.execute(SQL_INSERT_DATA_SRT)
+        _connection.commit()
+    except sqlite3.Error as er:
+        print('SQLite error: %s' % (' '.join(er.args)))
+        print("Exception class is: ", er.__class__)
+        print('SQLite traceback: ')
+        exc_type, exc_value, exc_tb = sys.exc_info()
+        print(traceback.format_exception(exc_type, exc_value, exc_tb))
+        _connection.close()
 
 
 DATASET_PATH=r"C:\Users\sheng\experiments\Log_analysis\dependency analysis"
@@ -91,23 +184,39 @@ for i, value in enumerate(win10_first_widths):
         print(f"{win11_tokens[win11_start+i: win11_end]}: {win10_tokens[win10_start+i: win10_end]}")
         break           
 
-
+'''
 print(len(win10_second_widths), len(win10_first_widths))
 print(win10_second_widths[:10])
 print(win10_second_interval_list[:10])
 print(win10_first_widths[:10])
 print(win10_first_interval_list[:10])
+print(win11_second_widths[:10])
+print(win11_second_interval_list[:10])
+print(win11_first_widths[:10])
+print(win11_first_interval_list[:10])
 '''
-new_win10_interval=copy.deepcopy(win10_second_interval_list)
-new_win10_widths=copy.deepcopy(win10_second_widths)
-for i in range(1, len(win10_second_interval_list)):
-    d_value=win10_first_widths[i]-3
-    assert(d_value>0)
-    new_win10_interval[i]=new_win10_interval[i]-d_value
-    new_win10_widths[i]=new_win10_widths[i]+d_value
-'''
+connection=sqlite3.connect(DATABASE)
+createUnMatchPatternHashTable1(connection)
+createUnMatchPatternHashTable2(connection)
+
+#first = pattern
+win11_patterns_hash_dict=dict()
+unmatch_list=[]
+for i, pattern_width in enumerate(win11_first_widths):
+    win10_pattern=get_ith_pattern(i, win10_first_interval_list, win10_first_widths, win10_tokens)
+    win11_pattern=get_ith_pattern(i, win11_first_interval_list, win11_first_widths, win11_tokens)
+    compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+    comp_result=compare(win10_pattern, win11_pattern)
+    if comp_result==False:
+        print(i)
 
 
+
+
+
+
+
+#generate files
 floder = SPLITED_DATA_FOLDER_NAME
 current_path= os.getcwd()
 storage_path=os.path.join(current_path, SPLITED_DATA_FOLDER_NAME)
@@ -156,4 +265,3 @@ for i in range(number):
     full_file_path=os.path.join(patterns_path, file_name)
     with open(full_file_path, "w+") as f:
         f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
-
