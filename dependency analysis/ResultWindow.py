@@ -7,10 +7,9 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtWidgets import QTableWidgetItem
+
 
 class CResultWindow(object):
-
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(604, 400)
@@ -25,8 +24,8 @@ class CResultWindow(object):
         self.verticalLayout.addWidget(self.label)
         self.tableWidget = QtWidgets.QTableWidget(Form)
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(len(self.table1_column_names))
-        self.tableWidget.setRowCount(len(self.data_left))
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
         self.verticalLayout.addWidget(self.tableWidget)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.verticalScrollBar = QtWidgets.QScrollBar(Form)
@@ -40,39 +39,14 @@ class CResultWindow(object):
         self.verticalLayout_2.addWidget(self.label_2)
         self.tableWidget_2 = QtWidgets.QTableWidget(Form)
         self.tableWidget_2.setObjectName("tableWidget_2")
-        self.tableWidget_2.setColumnCount(len(self.table2_column_names))
-        self.tableWidget_2.setRowCount(len(self.data_right))
+        self.tableWidget_2.setColumnCount(0)
+        self.tableWidget_2.setRowCount(0)
         self.verticalLayout_2.addWidget(self.tableWidget_2)
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         self.verticalLayout_3.addLayout(self.horizontalLayout)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
-
-
-
-        self.tableWidget.setHorizontalHeaderLabels(self.table1_column_names)
-        for i, data in enumerate(self.data_left):
-           # print(data)
-            item=QTableWidgetItem(data)
-            self.tableWidget.setItem(i, 3, item)
-        print(self.table1_column_names)
-        self.tableWidget.resizeColumnsToContents()
-        self.tableWidget.resizeRowsToContents()
-
-
-        print(self.data_right)
-        self.tableWidget_2.setHorizontalHeaderLabels(self.table2_column_names)
-        for i, data in enumerate(self.data_right):
-           # print(data)
-            item=QTableWidgetItem(data)
-            self.tableWidget_2.setItem(i, 3, item)
-        print(self.table2_column_names)
-        self.tableWidget_2.resizeColumnsToContents()
-        self.tableWidget_2.resizeRowsToContents()
-
-
-
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate

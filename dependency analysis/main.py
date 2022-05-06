@@ -34,6 +34,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
             data_left=data_left
              )
         self.ResultUI.setupUi(self.ResultWindow)
+        self.ResultUI.setupData()
         self.ResultWindow.show()
         
 

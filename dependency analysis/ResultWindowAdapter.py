@@ -15,19 +15,20 @@ class CResultWindowAdapter(CResultWindow):
         self.tableWidget_2.setColumnCount(len(self.table2_column_names))
         self.tableWidget.setColumnCount(len(self.table1_column_names))
         self.tableWidget.setRowCount(len(self.data_left))
-
+        self.tableWidget_2.setRowCount(len(self.data_right))
+        
 
         self.tableWidget.setHorizontalHeaderLabels(self.table1_column_names)
         for i, data in enumerate(self.data_left):
            # print(data)
             item=QTableWidgetItem(data)
             self.tableWidget.setItem(i, 3, item)
-        print(self.table1_column_names)
+        #print(self.table1_column_names)
         self.tableWidget.resizeColumnsToContents()
         self.tableWidget.resizeRowsToContents()
 
 
-        print(self.data_right)
+        #print(self.data_right)
         self.tableWidget_2.setHorizontalHeaderLabels(self.table2_column_names)
         for i, data in enumerate(self.data_right):
            # print(data)
