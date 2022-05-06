@@ -10,11 +10,6 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QTableWidgetItem
 
 class CResultWindow(object):
-    def __init__(self, **kargvs):
-        self.table1_column_names=kargvs["table1_column_names"]
-        self.table2_column_names=kargvs["table2_column_names"]
-        self.data_right=kargvs["data_right"].split("\n")
-        self.data_left=kargvs["data_left"].split("\n")
 
     def setupUi(self, Form):
         Form.setObjectName("Form")

@@ -6,6 +6,7 @@ from mainwindowgui import Ui_MainWindow
 from PyQt6  import QtWidgets
 import pandas as pd
 from ResultWindow import CResultWindow
+from ResultWindowAdapter import CResultWindowAdapter
 import os
 from PyQt6.QtGui import QFileSystemModel
 from PyQt6.QtCore import QDir
@@ -26,7 +27,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         data_left=open(glob.glob(data_left_name)[0],"r").read()
         data_right=open(glob.glob(data_right_name)[0], "r").read()
         self.ResultWindow = QtWidgets.QWidget()
-        self.ResultUI= CResultWindow(
+        self.ResultUI= CResultWindowAdapter(
             table1_column_names=table1_column_names,
             table2_column_names=table2_column_names,
             data_right=data_right,
