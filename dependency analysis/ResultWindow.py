@@ -28,10 +28,6 @@ class CResultWindow(object):
         self.tableWidget.setRowCount(0)
         self.verticalLayout.addWidget(self.tableWidget)
         self.horizontalLayout.addLayout(self.verticalLayout)
-        self.verticalScrollBar = QtWidgets.QScrollBar(Form)
-        self.verticalScrollBar.setOrientation(QtCore.Qt.Orientation.Vertical)
-        self.verticalScrollBar.setObjectName("verticalScrollBar")
-        self.horizontalLayout.addWidget(self.verticalScrollBar)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.label_2 = QtWidgets.QLabel(Form)
@@ -44,6 +40,9 @@ class CResultWindow(object):
         self.verticalLayout_2.addWidget(self.tableWidget_2)
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         self.verticalLayout_3.addLayout(self.horizontalLayout)
+        self.pushButton = QtWidgets.QPushButton(Form)
+        self.pushButton.setObjectName("pushButton")
+        self.verticalLayout_3.addWidget(self.pushButton)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -53,6 +52,7 @@ class CResultWindow(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.label.setText(_translate("Form", "TextLabel"))
         self.label_2.setText(_translate("Form", "TextLabel"))
+        self.pushButton.setText(_translate("Form", "Start comparing operation."))
 
 
 if __name__ == "__main__":

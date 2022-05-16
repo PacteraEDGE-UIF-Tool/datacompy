@@ -17,9 +17,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QHBoxLayout, QHeaderView,
-    QLabel, QMainWindow, QMenu, QMenuBar,
-    QPushButton, QSizePolicy, QStatusBar, QToolBar,
-    QTreeView, QVBoxLayout, QWidget)
+    QLabel, QLineEdit, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QSizePolicy, QStatusBar,
+    QToolBar, QTreeView, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -55,20 +55,25 @@ class Ui_MainWindow(object):
         self.actionQuit.setObjectName(u"actionQuit")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
+        self.horizontalLayout_5 = QHBoxLayout(self.centralwidget)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.treeView = QTreeView(self.centralwidget)
         self.treeView.setObjectName(u"treeView")
-        self.treeView.setGeometry(QRect(10, 10, 321, 541))
-        self.verticalLayoutWidget_3 = QWidget(self.centralwidget)
-        self.verticalLayoutWidget_3.setObjectName(u"verticalLayoutWidget_3")
-        self.verticalLayoutWidget_3.setGeometry(QRect(336, 18, 611, 531))
-        self.verticalLayout_4 = QVBoxLayout(self.verticalLayoutWidget_3)
+
+        self.horizontalLayout_5.addWidget(self.treeView)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+
+        self.horizontalLayout_5.addLayout(self.horizontalLayout_4)
+
+        self.verticalLayout_4 = QVBoxLayout()
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.pushButton_5 = QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton_5 = QPushButton(self.centralwidget)
         self.pushButton_5.setObjectName(u"pushButton_5")
         font = QFont()
         font.setFamilies([u"Roboto Bk"])
@@ -76,18 +81,18 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.pushButton_5)
 
-        self.label = QLabel(self.verticalLayoutWidget_3)
+        self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
 
         self.verticalLayout_3.addWidget(self.label)
 
-        self.pushButton_6 = QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton_6 = QPushButton(self.centralwidget)
         self.pushButton_6.setObjectName(u"pushButton_6")
         self.pushButton_6.setFont(font)
 
         self.verticalLayout_3.addWidget(self.pushButton_6)
 
-        self.label_2 = QLabel(self.verticalLayoutWidget_3)
+        self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
 
         self.verticalLayout_3.addWidget(self.label_2)
@@ -100,13 +105,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.pushButton_7 = QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton_7 = QPushButton(self.centralwidget)
         self.pushButton_7.setObjectName(u"pushButton_7")
         self.pushButton_7.setFont(font)
 
         self.horizontalLayout_3.addWidget(self.pushButton_7)
 
-        self.label_4 = QLabel(self.verticalLayoutWidget_3)
+        self.label_4 = QLabel(self.centralwidget)
         self.label_4.setObjectName(u"label_4")
 
         self.horizontalLayout_3.addWidget(self.label_4)
@@ -118,13 +123,13 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.pushButton_2 = QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton_2 = QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName(u"pushButton_2")
         self.pushButton_2.setFont(font)
 
         self.horizontalLayout.addWidget(self.pushButton_2)
 
-        self.pushButton_3 = QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton_3 = QPushButton(self.centralwidget)
         self.pushButton_3.setObjectName(u"pushButton_3")
         self.pushButton_3.setFont(font)
 
@@ -133,7 +138,17 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
-        self.label_3 = QLabel(self.verticalLayoutWidget_3)
+        self.lineEdit = QLineEdit(self.centralwidget)
+        self.lineEdit.setObjectName(u"lineEdit")
+
+        self.verticalLayout.addWidget(self.lineEdit)
+
+        self.pushButton_8 = QPushButton(self.centralwidget)
+        self.pushButton_8.setObjectName(u"pushButton_8")
+
+        self.verticalLayout.addWidget(self.pushButton_8)
+
+        self.label_3 = QLabel(self.centralwidget)
         self.label_3.setObjectName(u"label_3")
 
         self.verticalLayout.addWidget(self.label_3)
@@ -141,18 +156,18 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addLayout(self.verticalLayout)
 
-        self.pushButton = QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton = QPushButton(self.centralwidget)
         self.pushButton.setObjectName(u"pushButton")
         self.pushButton.setFont(font)
 
         self.verticalLayout_4.addWidget(self.pushButton)
 
-        self.checkBox = QCheckBox(self.verticalLayoutWidget_3)
+        self.checkBox = QCheckBox(self.centralwidget)
         self.checkBox.setObjectName(u"checkBox")
 
         self.verticalLayout_4.addWidget(self.checkBox)
 
-        self.pushButton_4 = QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton_4 = QPushButton(self.centralwidget)
         self.pushButton_4.setObjectName(u"pushButton_4")
         font1 = QFont()
         font1.setFamilies([u"Roboto Bk"])
@@ -161,10 +176,13 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addWidget(self.pushButton_4)
 
+
+        self.horizontalLayout_5.addLayout(self.verticalLayout_4)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 958, 22))
+        self.menubar.setGeometry(QRect(0, 0, 958, 26))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MainWindow.setMenuBar(self.menubar)
@@ -220,7 +238,8 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Default is \"./splited_dataset\"", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Go to previous", None))
         self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"Go to next", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.pushButton_8.setText(QCoreApplication.translate("MainWindow", u"Go to index number", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Conduct seperation process", None))
         self.checkBox.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
         self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"Check the splited file pair", None))

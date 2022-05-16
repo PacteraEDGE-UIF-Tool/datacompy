@@ -8,7 +8,7 @@ import pandas as pd
 from ResultWindow import CResultWindow
 from ResultWindowAdapter import CResultWindowAdapter
 import os
-from PyQt6.QtGui import QFileSystemModel
+from PyQt6.QtGui import QFileSystemModel, QIntValidator
 from PyQt6.QtCore import QDir
 from PyQt6.QtCore import QItemSelectionModel, QItemSelection
 from PyQt6 import QtCore
@@ -17,6 +17,13 @@ import glob
 from PyQt6.QtWidgets import QTableWidgetItem
 FILE_PATH=r"C:\Users\sheng\experiments\Log Info\DIE_log"
 class CMainWindow(QMainWindow, Ui_MainWindow):
+    def actionBtnGoToIndexClicked(self):
+        #We initialize the validator when lineedit created, so there is only number
+         parsed_index = int(self.lineEdit.text())
+         self.SelectCount=parsed_index
+         print(f"parsed_index:{parsed_index}")
+         self.label_3.setText(str(self.SelectCount))
+
 
     def actionBtnCompPairClicked(self):
         fp=os.path.join(FILE_PATH, "DIE_win10_.csv")
@@ -28,10 +35,12 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         data_right=open(glob.glob(data_right_name)[0], "r").read()
         self.ResultWindow = QtWidgets.QWidget()
         self.ResultUI= CResultWindowAdapter(
+            OutputFloder=self.OutputFloder,
             table1_column_names=table1_column_names,
             table2_column_names=table2_column_names,
             data_right=data_right,
-            data_left=data_left
+            data_left=data_left,
+            SelectCount=self.SelectCount
              )
         self.ResultUI.setupUi(self.ResultWindow)
         self.ResultUI.setupData()
@@ -79,6 +88,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.treeView.selectionModel().select( 
             index2,
             QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
+        self.label_3.setText(str(self.SelectCount))
 
 
 
@@ -97,7 +107,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
             index2,
             QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
         print(self.SelectCount)
-        
+        self.label_3.setText(str(self.SelectCount))
         
 
     def actionBtnOutputFloderClicked(self):
@@ -122,7 +132,8 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
 
         #the counter for go to next button
         self.SelectCount=0
-        self.DataLimitCount=100
+        #select count = file numbers /2
+        self.DataLimitCount=499
 
 
         #check whether the output folder exists
@@ -140,7 +151,9 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.treeView.setIndentation(10)
         self.treeView.setRootIndex(self.model.index(self.defualt_dataset_path))
         self.treeView.setWindowTitle("Splited file dataset")
+        #===================================================
         #initailize the treeview select
+        #===================================================
         index=self.model.index(0,0, self.model.index(self.OutputFloder))
         self.treeView.selectionModel().select(
             index,
@@ -150,7 +163,10 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
             index2,
          QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
 
-        
+        #===================================================
+        #Initialize the line edit validation
+        #===================================================
+        self.lineEdit.setValidator(QIntValidator(1, 9999999, self))
 
         #add action to show splited file result
         self.pushButton_4.clicked.connect(self.actionBtnCompPairClicked)
@@ -159,6 +175,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_7.clicked.connect(self.actionBtnOutputFloderClicked)
         self.pushButton_3.clicked.connect(self.actionBtnNextClicked)
         self.pushButton_2.clicked.connect(self.actionBtnPreviousClicked)
+        self.pushButton_8.clicked.connect(self.actionBtnGoToIndexClicked)
 
     def __init__(self):
         super().__init__()
