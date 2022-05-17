@@ -18,6 +18,8 @@ from PyQt6.QtWidgets import QTableWidgetItem
 from PyQt6.QtWidgets import QMessageBox
 from data_cleaner import cleanfile
 from prefixspan_pattern_generator import split_data_main
+import collections
+
 
 FILE_PATH=r"C:\Users\sheng\experiments\Log Info\DIE_log"
 class CMainWindow(QMainWindow, Ui_MainWindow):
@@ -52,24 +54,40 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         
 
 
-    def actionBtnGoToIndexClicked(self):
+    def actionBtnGoToIndex1Clicked(self):
         #We initialize the validator when lineedit created, so there is only number
          parsed_index = int(self.lineEdit.text())
-         self.SelectCount=parsed_index
+         self.SelectCount1=parsed_index
          print(f"parsed_index:{parsed_index}")
          self.label_3.setText(str(self.SelectCount))
-         self.SelectCount-=1
-         self.actionBtnNextClicked()
+         #just a workaround to show select
+         self.SelectCount1-=1
+         self.actionBtnNext1Clicked()
+
+
+    def actionBtnGoToIndex2Clicked(self):
+        #We initialize the validator when lineedit created, so there is only number
+         parsed_index = int(self.lineEdit_2.text())
+         self.SelectCount2=parsed_index
+         print(f"parsed_index:{parsed_index}")
+         self.label_6.setText(str(self.SelectCount))
+         #just a workaround to show select
+         self.SelectCount2-=1
+         self.actionBtnNext2Clicked()
 
 
     def actionBtnCompPairClicked(self):
+        
+        #!TO DO setup columns
         fp=os.path.join(FILE_PATH, "DIE_win10_.csv")
         table1_column_names=pd.read_csv(fp, index_col=0, nrows=0).columns.tolist()
         table2_column_names=table1_column_names
-        data_left_name= os.path.join(self.OutputFloder ,str(self.SelectCount)+"_win10*")
-        data_right_name=os.path.join(self.OutputFloder, str(self.SelectCount)+"_win11*")
-        data_left=open(glob.glob(data_left_name)[0],"r").read()
-        data_right=open(glob.glob(data_right_name)[0], "r").read()
+        
+
+        self.absfile1=os.path.join(self.OutputFloder, self.SelectedFile1)
+        self.absfile2=os.path.join(self.OutputFloder, self.SelectedFile2)
+        data_left=open(self.absfile1,"r").read()
+        data_right=open(self.absfile2, "r").read()
         self.ResultWindow = QtWidgets.QWidget()
         self.ResultUI= CResultWindowAdapter(
             OutputFloder=self.OutputFloder,
@@ -77,7 +95,8 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
             table2_column_names=table2_column_names,
             data_right=data_right,
             data_left=data_left,
-            SelectCount=self.SelectCount
+            absfile1=self.absfile1,
+            absfile2=self.absfile2
              )
         self.ResultUI.setupUi(self.ResultWindow)
         self.ResultUI.setupData()
@@ -97,45 +116,67 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.label.setText(self.first_fname)
         self.label.adjustSize()
         
-
-
-    def actionBtnNextClicked(self):
-        if self.SelectCount+1>self.DataLimitCount:
-            self.SelectCount=self.DataLimitCount
+    def actionBtnNext2Clicked(self):
+        if self.SelectCount2+1>self.DataLimitCount:
+            self.SelectCount2=self.DataLimitCount
         else:
-            self.SelectCount+=1
-        print(self.SelectCount)
+            self.SelectCount2+=1
+        print(self.SelectCount2)
+        self.showSelect()
+        self.label_6.setText(str(self.SelectCount2))
+
+
+    def actionBtnPrevious2Clicked(self):
+        if self.SelectCount2-1<0:
+            self.SelectCount2=0
+        else:
+            self.SelectCount2-=1
+        self.showSelect()
+        print(self.SelectCount2)
+        self.label_6.setText(str(self.SelectCount2))
         
 
-        index=self.model.index(self.SelectCount*2,0, self.model.index(self.OutputFloder))
+    def showSelect(self):
+        #row , columns ...
+        index1=self.model.index(self.SelectCount1,0, self.model.index(self.OutputFloder))
          #programmatical selection
         self.treeView.selectionModel().select(
-            index,
+            index1,
             QtCore.QItemSelectionModel.SelectionFlag.ClearAndSelect | QtCore.QItemSelectionModel.SelectionFlag.Rows)
-        index2=self.model.index(self.SelectCount*2+1,0, self.model.index(self.OutputFloder))
-        self.treeView.selectionModel().select( 
+        index2=self.model.index(self.SelectCount2,0, self.model.index(self.OutputFloder))
+         #programmatical selection
+        self.treeView.selectionModel().select(
             index2,
             QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
-        self.label_3.setText(str(self.SelectCount))
+
+
+        
+        self.SelectedFile1= self.model.itemData(index1)[0]
+        self.SelectedFile2=self.model.itemData(index2)[0]
+        print(self.SelectedFile1, self.SelectedFile2)
+        print("=======================================")
 
 
 
-    def actionBtnPreviousClicked(self):
-
-        if self.SelectCount-1<0:
-            self.SelectCount=0
+    def actionBtnNext1Clicked(self):
+        if self.SelectCount1+1>self.DataLimitCount:
+            self.SelectCount1=self.DataLimitCount
         else:
-            self.SelectCount-=1
-        index=self.model.index(self.SelectCount*2,0, self.model.index(self.OutputFloder))
-        self.treeView.selectionModel().select( #programmatical selection---------
-            index,
-            QtCore.QItemSelectionModel.SelectionFlag.ClearAndSelect | QtCore.QItemSelectionModel.SelectionFlag.Rows)
-        index2=self.model.index(self.SelectCount*2+1,0, self.model.index(self.OutputFloder))
-        self.treeView.selectionModel().select( 
-            index2,
-            QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
-        print(self.SelectCount)
-        self.label_3.setText(str(self.SelectCount))
+            self.SelectCount1+=1
+        print(self.SelectCount1)
+        
+        self.showSelect()
+        self.label_3.setText(str(self.SelectCount1))
+
+
+    def actionBtnPrevious1Clicked(self):
+        if self.SelectCount1-1<0:
+            self.SelectCount1=0
+        else:
+            self.SelectCount1-=1
+        self.showSelect()
+        print(self.SelectCount1)
+        self.label_3.setText(str(self.SelectCount1))
         
 
     def actionBtnOutputFloderClicked(self):
@@ -164,10 +205,17 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.OutputFloder=self.defualt_dataset_path
 
         #the counter for go to next button
-        self.SelectCount=0
+        self.SelectCount1=0
+        self.SelectCount2=0
         #select count = file numbers /2
         self.DataLimitCount=499
 
+        #select file queue
+        self.SelectFileQueue=collections.deque(["",""],2)
+
+        #selected file by selected count
+        self.SelectedFile1=''
+        self.SeletedFile2=''
 
         #check whether the output folder exists
         if not os.path.isdir(self.defualt_dataset_path):
@@ -184,6 +232,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.treeView.setIndentation(10)
         self.treeView.setRootIndex(self.model.index(self.defualt_dataset_path))
         self.treeView.setWindowTitle("Splited file dataset")
+        
         #===================================================
         #initailize the treeview select
         #===================================================
@@ -207,11 +256,14 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_6.clicked.connect(self.actionBtnSelectCleanFile1Clicked)
         self.pushButton_10.clicked.connect(self.actionBtnSelectCleanFile2Clicked)
         self.pushButton_7.clicked.connect(self.actionBtnOutputFloderClicked)
-        self.pushButton_3.clicked.connect(self.actionBtnNextClicked)
-        self.pushButton_2.clicked.connect(self.actionBtnPreviousClicked)
-        self.pushButton_8.clicked.connect(self.actionBtnGoToIndexClicked)
+        self.pushButton_3.clicked.connect(self.actionBtnNext1Clicked)
+        self.pushButton_2.clicked.connect(self.actionBtnPrevious1Clicked)
+        self.pushButton_8.clicked.connect(self.actionBtnGoToIndex1Clicked)
         self.pushButton.clicked.connect(self.actionBtnCleanDataClicked)
         self.pushButton_9.clicked.connect(self.actionBtnPrefixSpanClicked)
+        self.pushButton_13.clicked.connect(self.actionBtnNext2Clicked)
+        self.pushButton_12.clicked.connect(self.actionBtnPrevious2Clicked)
+        self.pushButton_11.clicked.connect(self.actionBtnGoToIndex2Clicked)
 
     def __init__(self):
         super().__init__()

@@ -26,7 +26,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(940, 645)
+        MainWindow.resize(1148, 724)
+        MainWindow.setMinimumSize(QSize(0, 0))
         MainWindow.setAutoFillBackground(False)
         self.actionNew = QAction(MainWindow)
         self.actionNew.setObjectName(u"actionNew")
@@ -56,17 +57,17 @@ class Ui_MainWindow(object):
         self.actionQuit.setObjectName(u"actionQuit")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.horizontalLayout_13 = QHBoxLayout(self.centralwidget)
-        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.horizontalLayout_15 = QHBoxLayout(self.centralwidget)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.treeView = QTreeView(self.centralwidget)
         self.treeView.setObjectName(u"treeView")
 
-        self.horizontalLayout_13.addWidget(self.treeView)
+        self.horizontalLayout_15.addWidget(self.treeView)
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
 
-        self.horizontalLayout_13.addLayout(self.horizontalLayout_4)
+        self.horizontalLayout_15.addLayout(self.horizontalLayout_4)
 
         self.verticalLayout_4 = QVBoxLayout()
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
@@ -205,27 +206,37 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addItem(self.verticalSpacer)
 
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.pushButton_2 = QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName(u"pushButton_2")
         self.pushButton_2.setFont(font)
+        icon4 = QIcon()
+        icon4.addFile(u"img/up.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.pushButton_2.setIcon(icon4)
 
-        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.verticalLayout_4.addWidget(self.pushButton_2)
 
         self.pushButton_3 = QPushButton(self.centralwidget)
         self.pushButton_3.setObjectName(u"pushButton_3")
         self.pushButton_3.setFont(font)
+        icon5 = QIcon()
+        icon5.addFile(u"img/down.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.pushButton_3.setIcon(icon5)
 
-        self.horizontalLayout.addWidget(self.pushButton_3)
+        self.verticalLayout_4.addWidget(self.pushButton_3)
 
-
-        self.verticalLayout.addLayout(self.horizontalLayout)
-
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.label_3 = QLabel(self.centralwidget)
+        self.label_3.setObjectName(u"label_3")
+
+        self.horizontalLayout_5.addWidget(self.label_3)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_5.addItem(self.horizontalSpacer)
+
         self.lineEdit = QLineEdit(self.centralwidget)
         self.lineEdit.setObjectName(u"lineEdit")
 
@@ -240,10 +251,70 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_5)
 
-        self.label_3 = QLabel(self.centralwidget)
-        self.label_3.setObjectName(u"label_3")
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
 
-        self.verticalLayout.addWidget(self.label_3)
+        self.verticalLayout.addLayout(self.horizontalLayout)
+
+        self.verticalLayout_8 = QVBoxLayout()
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_8.addItem(self.verticalSpacer_4)
+
+        self.horizontalLayout_14 = QHBoxLayout()
+        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
+        self.pushButton_12 = QPushButton(self.centralwidget)
+        self.pushButton_12.setObjectName(u"pushButton_12")
+        self.pushButton_12.setMinimumSize(QSize(30, 0))
+        self.pushButton_12.setFont(font)
+        self.pushButton_12.setIcon(icon4)
+
+        self.horizontalLayout_14.addWidget(self.pushButton_12)
+
+
+        self.verticalLayout_8.addLayout(self.horizontalLayout_14)
+
+        self.horizontalLayout_13 = QHBoxLayout()
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.pushButton_13 = QPushButton(self.centralwidget)
+        self.pushButton_13.setObjectName(u"pushButton_13")
+        self.pushButton_13.setMinimumSize(QSize(30, 0))
+        self.pushButton_13.setFont(font)
+        self.pushButton_13.setIcon(icon5)
+
+        self.horizontalLayout_13.addWidget(self.pushButton_13)
+
+
+        self.verticalLayout_8.addLayout(self.horizontalLayout_13)
+
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.label_6 = QLabel(self.centralwidget)
+        self.label_6.setObjectName(u"label_6")
+
+        self.horizontalLayout_6.addWidget(self.label_6)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_6.addItem(self.horizontalSpacer_2)
+
+        self.lineEdit_2 = QLineEdit(self.centralwidget)
+        self.lineEdit_2.setObjectName(u"lineEdit_2")
+
+        self.horizontalLayout_6.addWidget(self.lineEdit_2)
+
+        self.pushButton_11 = QPushButton(self.centralwidget)
+        self.pushButton_11.setObjectName(u"pushButton_11")
+        self.pushButton_11.setFont(font)
+
+        self.horizontalLayout_6.addWidget(self.pushButton_11)
+
+
+        self.verticalLayout_8.addLayout(self.horizontalLayout_6)
+
+
+        self.verticalLayout.addLayout(self.verticalLayout_8)
 
         self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -262,12 +333,12 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.addWidget(self.pushButton_4)
 
 
-        self.horizontalLayout_13.addLayout(self.verticalLayout_4)
+        self.horizontalLayout_15.addLayout(self.verticalLayout_4)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 940, 26))
+        self.menubar.setGeometry(QRect(0, 0, 1148, 26))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MainWindow.setMenuBar(self.menubar)
@@ -326,10 +397,14 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Default is \"./splited_dataset\"", None))
         self.checkBox.setText(QCoreApplication.translate("MainWindow", u"Use pattern from saved record", None))
         self.pushButton_9.setText(QCoreApplication.translate("MainWindow", u"Split cleaned_file with pattern to output floder", None))
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Go to previous", None))
-        self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"Go to next", None))
-        self.pushButton_8.setText(QCoreApplication.translate("MainWindow", u"Go to index number", None))
+        self.pushButton_2.setText("")
+        self.pushButton_3.setText("")
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.pushButton_8.setText(QCoreApplication.translate("MainWindow", u"Go to index number", None))
+        self.pushButton_12.setText("")
+        self.pushButton_13.setText("")
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.pushButton_11.setText(QCoreApplication.translate("MainWindow", u"Go to index number", None))
         self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"Check the splited file pair", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))

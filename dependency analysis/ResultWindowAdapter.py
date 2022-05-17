@@ -13,10 +13,9 @@ class CResultWindowAdapter(CResultWindow):
             table.item(rowIndex, j).setBackground(color)
     def actionBtnCompareClicked(self):
         _notimportant_col_name="a"
-        file_name_left=os.path.join(self.OutputFloder, str(self.SelectCount)+"_win10*")
-        file_name_right=os.path.join(self.OutputFloder, str(self.SelectCount)+"_win11*")
-        data_left= pd.read_csv(glob.glob(file_name_left)[0], delimiter=r'\n',  header=None, names=list(_notimportant_col_name))
-        data_right= pd.read_csv(glob.glob(file_name_right)[0], delimiter=r'\n',  header=None, names=list(_notimportant_col_name))
+
+        data_left= pd.read_csv(self.absfile1, delimiter=r'\n',  header=None, names=list(_notimportant_col_name))
+        data_right= pd.read_csv(self.absfile2, delimiter=r'\n',  header=None, names=list(_notimportant_col_name))
         print(f"data left: {data_left}")
         print(f"data_right: {data_right}")
         result_left_df=None
@@ -84,8 +83,9 @@ class CResultWindowAdapter(CResultWindow):
         self.table2_column_names=kargvs["table2_column_names"]
         self.data_right=kargvs["data_right"].split("\n")
         self.data_left=kargvs["data_left"].split("\n")
-        self.SelectCount=kargvs["SelectCount"]
         self.OutputFloder=kargvs["OutputFloder"]
+        self.absfile1=kargvs['absfile1']
+        self.absfile2=kargvs['absfile2']
         self.CompareColName="Prototype"
         
     def setupData(self):
