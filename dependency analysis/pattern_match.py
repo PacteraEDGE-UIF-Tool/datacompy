@@ -238,7 +238,7 @@ for root, dirs, files in os.walk(floder):
     for file in files:
         os.remove(os.path.join(root, file))
 
-number=500
+number=min(len(win10_second_interval_list), len(win11_second_interval_list))
 #gen unmatch datas
 for i in range(number):
     start= win11_second_interval_list[i]

@@ -18,14 +18,15 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QHBoxLayout, QHeaderView,
     QLabel, QLineEdit, QMainWindow, QMenu,
-    QMenuBar, QPushButton, QSizePolicy, QStatusBar,
-    QToolBar, QTreeView, QVBoxLayout, QWidget)
+    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
+    QStatusBar, QToolBar, QTreeView, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(958, 646)
+        MainWindow.resize(940, 645)
         MainWindow.setAutoFillBackground(False)
         self.actionNew = QAction(MainWindow)
         self.actionNew.setObjectName(u"actionNew")
@@ -55,17 +56,17 @@ class Ui_MainWindow(object):
         self.actionQuit.setObjectName(u"actionQuit")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.horizontalLayout_5 = QHBoxLayout(self.centralwidget)
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_13 = QHBoxLayout(self.centralwidget)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.treeView = QTreeView(self.centralwidget)
         self.treeView.setObjectName(u"treeView")
 
-        self.horizontalLayout_5.addWidget(self.treeView)
+        self.horizontalLayout_13.addWidget(self.treeView)
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
 
-        self.horizontalLayout_5.addLayout(self.horizontalLayout_4)
+        self.horizontalLayout_13.addLayout(self.horizontalLayout_4)
 
         self.verticalLayout_4 = QVBoxLayout()
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
@@ -73,29 +74,40 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.horizontalLayout_8 = QHBoxLayout()
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
         self.pushButton_5 = QPushButton(self.centralwidget)
         self.pushButton_5.setObjectName(u"pushButton_5")
         font = QFont()
-        font.setFamilies([u"Roboto Bk"])
+        font.setFamilies([u"Times New Roman"])
         self.pushButton_5.setFont(font)
 
-        self.verticalLayout_3.addWidget(self.pushButton_5)
+        self.horizontalLayout_8.addWidget(self.pushButton_5)
 
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout_8)
+
+        self.horizontalLayout_10 = QHBoxLayout()
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
+        self.label.setMargin(20)
 
-        self.verticalLayout_3.addWidget(self.label)
+        self.horizontalLayout_10.addWidget(self.label)
 
-        self.pushButton_6 = QPushButton(self.centralwidget)
-        self.pushButton_6.setObjectName(u"pushButton_6")
-        self.pushButton_6.setFont(font)
 
-        self.verticalLayout_3.addWidget(self.pushButton_6)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_10)
 
-        self.label_2 = QLabel(self.centralwidget)
-        self.label_2.setObjectName(u"label_2")
+        self.horizontalLayout_9 = QHBoxLayout()
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.pushButton = QPushButton(self.centralwidget)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setFont(font)
 
-        self.verticalLayout_3.addWidget(self.label_2)
+        self.horizontalLayout_9.addWidget(self.pushButton)
+
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout_9)
 
 
         self.horizontalLayout_2.addLayout(self.verticalLayout_3)
@@ -103,21 +115,95 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addLayout(self.horizontalLayout_2)
 
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_2)
+
+        self.verticalLayout_6 = QVBoxLayout()
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_5 = QVBoxLayout()
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.horizontalLayout_11 = QHBoxLayout()
+        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
+        self.pushButton_6 = QPushButton(self.centralwidget)
+        self.pushButton_6.setObjectName(u"pushButton_6")
+        self.pushButton_6.setFont(font)
+
+        self.horizontalLayout_11.addWidget(self.pushButton_6)
+
+        self.pushButton_10 = QPushButton(self.centralwidget)
+        self.pushButton_10.setObjectName(u"pushButton_10")
+        self.pushButton_10.setFont(font)
+
+        self.horizontalLayout_11.addWidget(self.pushButton_10)
+
+
+        self.verticalLayout_5.addLayout(self.horizontalLayout_11)
+
+
+        self.verticalLayout_6.addLayout(self.verticalLayout_5)
+
+        self.horizontalLayout_12 = QHBoxLayout()
+        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.label_5 = QLabel(self.centralwidget)
+        self.label_5.setObjectName(u"label_5")
+
+        self.horizontalLayout_12.addWidget(self.label_5)
+
+        self.label_2 = QLabel(self.centralwidget)
+        self.label_2.setObjectName(u"label_2")
+
+        self.horizontalLayout_12.addWidget(self.label_2)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_12)
+
+
+        self.verticalLayout_4.addLayout(self.verticalLayout_6)
+
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.pushButton_7 = QPushButton(self.centralwidget)
         self.pushButton_7.setObjectName(u"pushButton_7")
         self.pushButton_7.setFont(font)
 
-        self.horizontalLayout_3.addWidget(self.pushButton_7)
+        self.horizontalLayout_7.addWidget(self.pushButton_7)
 
         self.label_4 = QLabel(self.centralwidget)
         self.label_4.setObjectName(u"label_4")
 
-        self.horizontalLayout_3.addWidget(self.label_4)
+        self.horizontalLayout_7.addWidget(self.label_4)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_7)
+
+        self.checkBox = QCheckBox(self.centralwidget)
+        self.checkBox.setObjectName(u"checkBox")
+
+        self.verticalLayout_2.addWidget(self.checkBox)
+
+        self.pushButton_9 = QPushButton(self.centralwidget)
+        self.pushButton_9.setObjectName(u"pushButton_9")
+        font1 = QFont()
+        font1.setFamilies([u"Times New Roman"])
+        font1.setPointSize(9)
+        self.pushButton_9.setFont(font1)
+
+        self.verticalLayout_2.addWidget(self.pushButton_9)
+
+
+        self.horizontalLayout_3.addLayout(self.verticalLayout_2)
 
 
         self.verticalLayout_4.addLayout(self.horizontalLayout_3)
+
+        self.verticalSpacer = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer)
 
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -138,51 +224,50 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.lineEdit = QLineEdit(self.centralwidget)
         self.lineEdit.setObjectName(u"lineEdit")
 
-        self.verticalLayout.addWidget(self.lineEdit)
+        self.horizontalLayout_5.addWidget(self.lineEdit)
 
         self.pushButton_8 = QPushButton(self.centralwidget)
         self.pushButton_8.setObjectName(u"pushButton_8")
+        self.pushButton_8.setFont(font)
 
-        self.verticalLayout.addWidget(self.pushButton_8)
+        self.horizontalLayout_5.addWidget(self.pushButton_8)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_5)
 
         self.label_3 = QLabel(self.centralwidget)
         self.label_3.setObjectName(u"label_3")
 
         self.verticalLayout.addWidget(self.label_3)
 
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer_3)
+
 
         self.verticalLayout_4.addLayout(self.verticalLayout)
 
-        self.pushButton = QPushButton(self.centralwidget)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setFont(font)
-
-        self.verticalLayout_4.addWidget(self.pushButton)
-
-        self.checkBox = QCheckBox(self.centralwidget)
-        self.checkBox.setObjectName(u"checkBox")
-
-        self.verticalLayout_4.addWidget(self.checkBox)
-
         self.pushButton_4 = QPushButton(self.centralwidget)
         self.pushButton_4.setObjectName(u"pushButton_4")
-        font1 = QFont()
-        font1.setFamilies([u"Roboto Bk"])
-        font1.setBold(False)
-        self.pushButton_4.setFont(font1)
+        font2 = QFont()
+        font2.setFamilies([u"Times New Roman"])
+        font2.setBold(False)
+        self.pushButton_4.setFont(font2)
 
         self.verticalLayout_4.addWidget(self.pushButton_4)
 
 
-        self.horizontalLayout_5.addLayout(self.verticalLayout_4)
+        self.horizontalLayout_13.addLayout(self.verticalLayout_4)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 958, 26))
+        self.menubar.setGeometry(QRect(0, 0, 940, 26))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MainWindow.setMenuBar(self.menubar)
@@ -230,18 +315,21 @@ class Ui_MainWindow(object):
         self.actionPrint_Preview.setText(QCoreApplication.translate("MainWindow", u"Print Preview", None))
         self.actionExport_PDF.setText(QCoreApplication.translate("MainWindow", u"Export PDF", None))
         self.actionQuit.setText(QCoreApplication.translate("MainWindow", u"Quit", None))
-        self.pushButton_5.setText(QCoreApplication.translate("MainWindow", u"Select file one", None))
+        self.pushButton_5.setText(QCoreApplication.translate("MainWindow", u"Select file Origin", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"file name 1", None))
-        self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"Select file two", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"file name 2", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Generate cleaned data", None))
+        self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"Select cleaned file1", None))
+        self.pushButton_10.setText(QCoreApplication.translate("MainWindow", u"Select  cleaned file2", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"cleaned file name 1", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"cleaned file name2", None))
         self.pushButton_7.setText(QCoreApplication.translate("MainWindow", u"Select output folder", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Default is \"./splited_dataset\"", None))
+        self.checkBox.setText(QCoreApplication.translate("MainWindow", u"Use pattern from saved record", None))
+        self.pushButton_9.setText(QCoreApplication.translate("MainWindow", u"Split cleaned_file with pattern to output floder", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Go to previous", None))
         self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"Go to next", None))
         self.pushButton_8.setText(QCoreApplication.translate("MainWindow", u"Go to index number", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"0", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Conduct seperation process", None))
-        self.checkBox.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
         self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"Check the splited file pair", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))

@@ -3,6 +3,7 @@
 from encodings import search_function
 from enum import unique
 from fileinput import filename
+from posixpath import split
 from re import S
 from prefixspan import PrefixSpan
 import random
@@ -38,6 +39,7 @@ DATABASE="Sqlite3.db"
 filtered_pattern_list=[]
 first_pattern_list=[]
 SPLITED_DATA_FOLDER_NAME='splited_dataset'
+INFO_FILE_NAME="CleanData_info.txt"
 
 '''
 Description
@@ -427,7 +429,7 @@ def createMatchMap(Result_patterns_list, index_dictionary, tokens):
     return match_map
 
 
-def split_dataset(number=500, dict1, dict2):
+def split_dataset(number=500):
     #gen unmatch datas
     for i in range(number):
         start= win11_second_interval_list[i]
@@ -469,17 +471,17 @@ def split_dataset(number=500, dict1, dict2):
 #Description:
 #   program entry
 #===================================================
-def main():
+def split_data_main(filename1, filename2, dataset_path, NotRetrain=True):
     Result_patterns_list=[]
             #read data
     win10data=None
-    win10_file_path=os.path.join(DATASET_PATH, WIN10_FILE_NAME)
+    win10_file_path=os.path.join(dataset_path, filename1)
     win10data=open(win10_file_path, 'r', encoding='utf-8').read()
     assert(win10data is not None)
 
 
     win11data=None
-    win11_file_path=os.path.join(DATASET_PATH, WIN11_FILE_NAME)
+    win11_file_path=os.path.join(dataset_path, filename2)
     win11data=open(win11_file_path, 'r', encoding='utf-8').read()
 
 
@@ -492,7 +494,7 @@ def main():
     win11_index_dictionary=createIndexDictionary(win11_tokens)
     win10_index_dictionary=createIndexDictionary(win10_tokens)
     #retrain to get the new pattern again
-    if not USE_SAVED_DATA_MODE:
+    if not NotRetrain:
         Result_hash_list=[]
         Result_pattern_list=[]
 
@@ -632,10 +634,11 @@ def main():
 
     #clean the folder first
     floder = SPLITED_DATA_FOLDER_NAME
+    number=min(len(win10_second_interval_list), len(win11_second_interval_list))
     for root, dirs, files in os.walk(floder):
         for file in files:
             os.remove(os.path.join(root, file))
-    for i in range(10):
+    for i in range(number):
         start= win11_second_interval_list[i]
         length=win11_second_widths[i]
         file_name=str(i)+"_"+"win11_"+str(start)+"_"+str(length)+".txt"
@@ -643,7 +646,7 @@ def main():
         with open(full_file_path, "w+") as f:
             f.write(  "\n".join(  str(item) for item in win11_tokens[start:start+length]))
 
-    for i in range(10):
+    for i in range(number):
         start= win10_second_interval_list[i]
         length=win10_second_widths[i]
         file_name=str(i)+"_""win10_"+str(start)+"_"+str(length)+".txt"
@@ -681,4 +684,4 @@ def main():
     print(tokens[286542:286576])
     '''
 if __name__=="__main__":
-    main()
+    split_data_main(WIN10_FILE_NAME, WIN11_FILE_NAME, str(os.path.dirname(__file__)), USE_SAVED_DATA_MODE)

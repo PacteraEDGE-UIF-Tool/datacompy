@@ -15,14 +15,51 @@ from PyQt6 import QtCore
 from PyQt6 import QtGui,uic
 import glob
 from PyQt6.QtWidgets import QTableWidgetItem
+from PyQt6.QtWidgets import QMessageBox
+from data_cleaner import cleanfile
+from prefixspan_pattern_generator import split_data_main
+
 FILE_PATH=r"C:\Users\sheng\experiments\Log Info\DIE_log"
 class CMainWindow(QMainWindow, Ui_MainWindow):
+
+    def actionBtnSelectCleanFile1Clicked(self):
+        self.cleaned_first_fname=QFileDialog.getOpenFileName(
+            self, 'Open file', 
+            self.current_path,"All files (*.*)"
+            )[0]
+        self.label_5.setText(self.cleaned_first_fname)
+        self.label_5.adjustSize()
+
+
+    def actionBtnSelectCleanFile2Clicked(self):
+        self.cleaned_second_fname=QFileDialog.getOpenFileName(
+            self, 'Open file', 
+            self.current_path,"All files (*.*)"
+            )[0]
+        self.label_2.setText(self.cleaned_first_fname)
+        self.label_2.adjustSize()
+
+
+    def actionBtnPrefixSpanClicked(self):
+        split_data_main(self.cleaned_first_fname, self.cleaned_second_fname, self.current_path, self.UseSaveDataMode)
+        
+
+    def actionBtnCleanDataClicked(self):
+        if self.first_fname ==None :
+             QMessageBox.information(None,'Error', 'Please select file you want to clean', QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Close)
+             return
+        cleanfile(self.first_fname, self.current_path)
+        
+
+
     def actionBtnGoToIndexClicked(self):
         #We initialize the validator when lineedit created, so there is only number
          parsed_index = int(self.lineEdit.text())
          self.SelectCount=parsed_index
          print(f"parsed_index:{parsed_index}")
          self.label_3.setText(str(self.SelectCount))
+         self.SelectCount-=1
+         self.actionBtnNextClicked()
 
 
     def actionBtnCompPairClicked(self):
@@ -52,23 +89,14 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         print(self.model.fileName(Qmodelidx))
         print(self.model.fileInfo(Qmodelidx))
 
-    def actionBtnSelectFile1Clicked(self):
-        filename=QFileDialog.getOpenFileName(
+    def actionBtnSelectOrigFileClicked(self):
+        self.first_fname=QFileDialog.getOpenFileName(
             self, 'Open file', 
             self.current_path,"All files (*.*)"
             )[0]
         self.label.setText(self.first_fname)
         self.label.adjustSize()
         
-
-    def actionBtnSelectFile2Clicked(self):
-        self.second_fname = QFileDialog.getOpenFileName(
-            self, 'Open file', 
-            self.current_path,"All files (*.*)")[0]
-        self.label_2.setText(self.second_fname)
-        self.label_2.adjustSize()
-
-
 
 
     def actionBtnNextClicked(self):
@@ -126,6 +154,11 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         #=======================================
         #Initialize some variables
         #=======================================
+        #cleaed file name
+        self.cleaned_first_fname=None
+        self.cleaned_second_fname=None
+        # retrain or not retran, TO DO: get value from check box
+        self.UseSaveDataMode=False
         self.current_path= os.path.dirname(os.path.abspath(__file__))
         self.defualt_dataset_path=os.path.join(self.current_path, "splited_dataset")
         self.OutputFloder=self.defualt_dataset_path
@@ -170,12 +203,15 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
 
         #add action to show splited file result
         self.pushButton_4.clicked.connect(self.actionBtnCompPairClicked)
-        self.pushButton_5.clicked.connect(self.actionBtnSelectFile1Clicked)
-        self.pushButton_6.clicked.connect(self.actionBtnSelectFile2Clicked)
+        self.pushButton_5.clicked.connect(self.actionBtnSelectOrigFileClicked)
+        self.pushButton_6.clicked.connect(self.actionBtnSelectCleanFile1Clicked)
+        self.pushButton_10.clicked.connect(self.actionBtnSelectCleanFile2Clicked)
         self.pushButton_7.clicked.connect(self.actionBtnOutputFloderClicked)
         self.pushButton_3.clicked.connect(self.actionBtnNextClicked)
         self.pushButton_2.clicked.connect(self.actionBtnPreviousClicked)
         self.pushButton_8.clicked.connect(self.actionBtnGoToIndexClicked)
+        self.pushButton.clicked.connect(self.actionBtnCleanDataClicked)
+        self.pushButton_9.clicked.connect(self.actionBtnPrefixSpanClicked)
 
     def __init__(self):
         super().__init__()

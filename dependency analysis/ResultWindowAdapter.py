@@ -12,47 +12,70 @@ class CResultWindowAdapter(CResultWindow):
             #QtGui.QColor(125,125,125)
             table.item(rowIndex, j).setBackground(color)
     def actionBtnCompareClicked(self):
+        _notimportant_col_name="a"
         file_name_left=os.path.join(self.OutputFloder, str(self.SelectCount)+"_win10*")
         file_name_right=os.path.join(self.OutputFloder, str(self.SelectCount)+"_win11*")
-        data_left= pd.read_csv(glob.glob(file_name_left)[0], delimiter=r'\n',  header=None, names=['a'])
-        data_right= pd.read_csv(glob.glob(file_name_right)[0], delimiter=r'\n',  header=None, names=['a'])
+        data_left= pd.read_csv(glob.glob(file_name_left)[0], delimiter=r'\n',  header=None, names=list(_notimportant_col_name))
+        data_right= pd.read_csv(glob.glob(file_name_right)[0], delimiter=r'\n',  header=None, names=list(_notimportant_col_name))
         print(f"data left: {data_left}")
         print(f"data_right: {data_right}")
         result_left_df=None
         result_right_df=None
+        NoDifferntFlag=True
 
-        compare = datacompy.Compare(data_left, data_right, join_columns="a")
+        compare = datacompy.Compare(data_left, data_right, join_columns=_notimportant_col_name)
         compare.matches(ignore_extra_columns=False)
 
         report=compare.customized_report()
         result_left_df=report[0]
         result_right_df=report[1]
+        result_outer_merged=report[2]
         if not result_left_df.empty:
+            NoDifferntFlag=False
             indexies_left=list(result_left_df.index)
             # Get the ID(index) by the name of the different dataset
             #the left or right might be non exist, so we conduct operation in try excep zone.
             try:
-                print(f"left_indexies :{indexies_left}")
-                for row_index in indexies_left:
+                set1=set()
+                real_left_index_list=list()
+                real_left_index_list=result_left_df.index
+                for row_index in real_left_index_list:
                     #for i in range(self.tableWidget.columnCount()):
+                    #================================================
+                    #!important
+                    #===============================================
+                    #Qt TABLE start from 1, so we need to add 1
                     item=self.tableWidget.item(row_index, 3)
+                    if item !=None:
                         #print(row_index, i)
-                    item.setBackground(QtGui.QColor(173,255,47))
+                        item.setBackground(QtGui.QColor(107,142,35))
             except KeyError:
                 indexies_left=None
-
-
         if not result_right_df.empty:
+            NoDifferntFlag=False
             indexies_right=list(result_right_df.index)
+            print(f"right_indexies :{indexies_right}")
+            set1=set()
+            real_right_index_list=list()
             try:
-                for row_index in indexies_right:
+                for i in indexies_right:
+                    data=result_outer_merged.loc[i, _notimportant_col_name]
+                    set1.add(data)
+                for i in set1:
+                    tl1=data_right.index[data_right[_notimportant_col_name]==i].tolist()
+                    #print(tl1)
+                    real_right_index_list=[*real_right_index_list, *tl1]
+                print(f"real_right_index {real_right_index_list}")
+                for row_index in real_right_index_list:
+                    item=self.tableWidget_2.item(row_index,3)
+                    if item !=None:
                     #for i in range(self.tableWidget_2.columnCount()):
-                    self.tableWidget_2.item(row_index, 3).setBackground(QtGui.QColor(173,255,47))
+                        item.setBackground(QtGui.QColor(107,142,35))
             except KeyError:
                 indexies_right=None
 
 
-        else:
+        if NoDifferntFlag:
             QMessageBox.information(None,'Compelete the processing', 'These two files seems like the same', QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Close)
 
 
