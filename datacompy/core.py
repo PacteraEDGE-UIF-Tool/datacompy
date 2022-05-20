@@ -274,32 +274,32 @@ class Compare:
                 if self.df2[column].dtype.kind == "O":
                     self.df2[column] = self.df2[column].str.strip()
 
-        outer_join = self.df1.merge(
+        self.outer_join = self.df1.merge(
             self.df2, how="outer", suffixes=("_df1", "_df2"), indicator=True, **params
         )
 
         # Clean up temp columns for duplicate row matching
         if self._any_dupes:
             if self.on_index:
-                outer_join.index = outer_join[index_column]
-                outer_join.drop(index_column, axis=1, inplace=True)
+                self.outer_join.index = outer_join[index_column]
+                self.outer_join.drop(index_column, axis=1, inplace=True)
                 self.df1.drop(index_column, axis=1, inplace=True)
                 self.df2.drop(index_column, axis=1, inplace=True)
-            outer_join.drop(order_column, axis=1, inplace=True)
+            self.outer_join.drop(order_column, axis=1, inplace=True)
             self.df1.drop(order_column, axis=1, inplace=True)
             self.df2.drop(order_column, axis=1, inplace=True)
 
-        df1_cols = get_merged_columns(self.df1, outer_join, "_df1")
-        df2_cols = get_merged_columns(self.df2, outer_join, "_df2")
+        df1_cols = get_merged_columns(self.df1, self.outer_join, "_df1")
+        df2_cols = get_merged_columns(self.df2, self.outer_join, "_df2")
 
         LOG.debug("Selecting df1 unique rows")
-        self.df1_unq_rows = outer_join[outer_join["_merge"] == "left_only"][
+        self.df1_unq_rows = self.outer_join[self.outer_join["_merge"] == "left_only"][
             df1_cols
         ].copy()
         self.df1_unq_rows.columns = self.df1.columns
 
         LOG.debug("Selecting df2 unique rows")
-        self.df2_unq_rows = outer_join[outer_join["_merge"] == "right_only"][
+        self.df2_unq_rows = self.outer_join[self.outer_join["_merge"] == "right_only"][
             df2_cols
         ].copy()
         self.df2_unq_rows.columns = self.df2.columns
@@ -311,7 +311,7 @@ class Compare:
         )
 
         LOG.debug("Selecting intersecting rows")
-        self.intersect_rows = outer_join[outer_join["_merge"] == "both"].copy()
+        self.intersect_rows = self.outer_join[self.outer_join["_merge"] == "both"].copy()
         LOG.info(
             "Number of rows in df1 and df2 (not necessarily equal): {}".format(
                 len(self.intersect_rows)
@@ -503,7 +503,7 @@ class Compare:
 
         mm_bool = self.intersect_rows[match_list].all(axis="columns")
         return self.intersect_rows[~mm_bool][self.join_columns + return_list]
-
+        
     def customized_report(self):            
 
             # 1, 2, number of row not equal, equal
