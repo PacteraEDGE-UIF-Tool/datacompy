@@ -504,6 +504,11 @@ class Compare:
         mm_bool = self.intersect_rows[match_list].all(axis="columns")
         return self.intersect_rows[~mm_bool][self.join_columns + return_list]
 
+    def customized_report(self):            
+
+            # 1, 2, number of row not equal, equal
+        return self.df1_unq_rows, self.df2_unq_rows,  self.outer_join
+
     def report(self, sample_count=10, column_count=10):
         """Returns a string representation of a report.  The representation can
         then be printed or saved to a file.
