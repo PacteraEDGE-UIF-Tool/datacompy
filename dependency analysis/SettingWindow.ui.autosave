@@ -24,7 +24,7 @@
    <item>
     <widget class="QCheckBox" name="checkBox_2">
      <property name="text">
-      <string>Delete the same file after splited automatically</string>
+      <string>Delete the same file pairs automatically</string>
      </property>
     </widget>
    </item>

@@ -48,11 +48,15 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
 
 
     def actionBtnPrefixSpanClicked(self):
+        self.config.read('config.ini')
+        if  self.config.has_section("Settings"):
+            self.UseSaveDataMode=self.config.getboolean("Settings", "checkbox")
+            self.DeleteSameFileMode=self.config.getboolean("Settings", "checkbox_2")
         if self.cleaned_first_fname==None or self.cleaned_second_fname==None:
             QMessageBox.information(None,'Error', 'Please select input data before continue', QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Close)
             return
 
-        split_data_main(self.cleaned_first_fname, self.cleaned_second_fname, self.current_path, self.UseSaveDataMode)
+        split_data_main(self.cleaned_first_fname, self.cleaned_second_fname, self.current_path, self.UseSaveDataMode, self.DeleteSameFileMode)
         
 
     def actionBtnCleanDataClicked(self):
@@ -239,6 +243,7 @@ class CMainWindow(QMainWindow, Ui_MainWindow):
         self.cleaned_second_fname=None
         # retrain or not retran, TO DO: get value from check box
         self.UseSaveDataMode=False
+        self.DeleteSameFileMode=False
         self.current_path= os.path.dirname(os.path.abspath(__file__))
         self.defualt_dataset_path=os.path.join(self.current_path, "splited_dataset")
         self.OutputFloder=self.defualt_dataset_path

@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file './SettingWindow.ui'
+# Form implementation generated from reading ui file 'SettingWindow.ui'
 #
 # Created by: PyQt6 UI code generator 6.3.0
 #
@@ -27,6 +27,9 @@ class CSettingWindow(object):
         self.checkBox_4 = QtWidgets.QCheckBox(Form)
         self.checkBox_4.setObjectName("checkBox_4")
         self.verticalLayout.addWidget(self.checkBox_4)
+        self.pushButton = QtWidgets.QPushButton(Form)
+        self.pushButton.setObjectName("pushButton")
+        self.verticalLayout.addWidget(self.pushButton)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -34,10 +37,11 @@ class CSettingWindow(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.checkBox.setText(_translate("Form", "CheckBox"))
-        self.checkBox_2.setText(_translate("Form", "CheckBox"))
-        self.checkBox_3.setText(_translate("Form", "CheckBox"))
+        self.checkBox.setText(_translate("Form", "Use saved patern and not re train in split process."))
+        self.checkBox_2.setText(_translate("Form", "Delete the same file after splited automatically"))
+        self.checkBox_3.setText(_translate("Form", "Train pattern from sequential data of both side."))
         self.checkBox_4.setText(_translate("Form", "CheckBox"))
+        self.pushButton.setText(_translate("Form", "Save configs."))
 
 
 if __name__ == "__main__":

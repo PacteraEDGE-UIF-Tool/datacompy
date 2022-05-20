@@ -43,6 +43,7 @@ filtered_pattern_list=[]
 first_pattern_list=[]
 SPLITED_DATA_FOLDER_NAME='splited_dataset'
 INFO_FILE_NAME="CleanData_info.txt"
+DELETE_SAME_FILE_PAIR=False
 import configparser
 '''
 Description
@@ -474,7 +475,7 @@ def split_dataset(number=500):
 #Description:
 #   program entry
 #===================================================
-def split_data_main(filename1, filename2, dataset_path, NotRetrain=True):
+def split_data_main(filename1, filename2, dataset_path, NotRetrain=True, DELETE_SAME_FILE_PAIR=False):
     Result_patterns_list=[]
             #read data
     win10data=None
@@ -642,20 +643,41 @@ def split_data_main(filename1, filename2, dataset_path, NotRetrain=True):
         for file in files:
             os.remove(os.path.join(root, file))
     for i in range(number):
+        #Win11 file
         start= win11_second_interval_list[i]
         length=win11_second_widths[i]
-        file_name=str(i)+"_"+"win11_"+str(start)+"_"+str(length)+".txt"
-        full_file_path=os.path.join(storage_path, file_name)
-        with open(full_file_path, "w+") as f:
-            f.write(  "\n".join(  str(item) for item in win11_tokens[start:start+length]))
+        win11_file_name=str(i)+"_"+"win11_"+str(start)+"_"+str(length)+".txt"
+        win11_full_file_path=os.path.join(storage_path, win11_file_name)
 
-    for i in range(number):
-        start= win10_second_interval_list[i]
-        length=win10_second_widths[i]
-        file_name=str(i)+"_""win10_"+str(start)+"_"+str(length)+".txt"
-        full_file_path=os.path.join(storage_path, file_name)
-        with open(full_file_path, "w+") as f:
-            f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
+
+        #win10 file
+        start_win10= win10_second_interval_list[i]
+        length_win10=win10_second_widths[i]
+        win10_file_name=str(i)+"_""win10_"+str(start_win10)+"_"+str(length_win10)+".txt"
+        win10_full_file_path=os.path.join(storage_path, win10_file_name)
+
+        if DELETE_SAME_FILE_PAIR:
+            token_list_str_win10=("").join(win10_tokens[start_win10: start_win10+ length_win10])
+            token_list_str_win11=("").join(win11_tokens[start: start+length])
+
+            if md5hash(token_list_str_win10)==md5hash(token_list_str_win11):
+                continue            
+
+            else:
+                #write win11
+                with open(win11_full_file_path, "w+") as f:
+                    f.write(  "\n".join(  str(item) for item in win11_tokens[start:start+length]))
+                #write win10
+                with open(win10_full_file_path, "w+") as f:
+                    f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
+        else:
+            #write win11
+            with open(win11_full_file_path, "w+") as f:
+                f.write(  "\n".join(  str(item) for item in win11_tokens[start:start+length]))
+            #write win10
+            with open(win10_full_file_path, "w+") as f:
+                f.write(  "\n".join(  str(item) for item in win10_tokens[start:start+length]))
+
 
 
         with open('win10_first_interval_list.pickle', 'wb+') as fp:
@@ -691,4 +713,4 @@ def parseAndSetConfig():
     pass
 if __name__=="__main__":
     parseAndSetConfig()
-    split_data_main(WIN10_FILE_NAME, WIN11_FILE_NAME, str(os.path.dirname(__file__)), USE_SAVED_DATA_MODE)
+    split_data_main(WIN10_FILE_NAME, WIN11_FILE_NAME, str(os.path.dirname(__file__)), USE_SAVED_DATA_MODE, DELETE_SAME_FILE_PAIR)

@@ -10,3 +10,4 @@ compare_result.csv
 **/*.pyc
 **/*.txt
 **/pattern_match copy.py
+**/config.ini
