@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1148</width>
-    <height>724</height>
+    <height>885</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -19,8 +19,15 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>img/diff.png</normaloff>img/diff.png</iconset>
+  </property>
   <property name="autoFillBackground">
    <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_15">
@@ -31,11 +38,37 @@
      <layout class="QHBoxLayout" name="horizontalLayout_4"/>
     </item>
     <item>
+     <widget class="Line" name="line_5">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="Line" name="line_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="label_7">
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>•Step1</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_8">
             <item>
@@ -46,7 +79,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Select file Origin</string>
+               <string>Select original file</string>
               </property>
              </widget>
             </item>
@@ -57,7 +90,7 @@
             <item>
              <widget class="QLabel" name="label">
               <property name="text">
-               <string>file name 1</string>
+               <string/>
               </property>
               <property name="margin">
                <number>20</number>
@@ -78,6 +111,10 @@
               <property name="text">
                <string>Generate cleaned data</string>
               </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>img/new_analysis.png</normaloff>img/new_analysis.png</iconset>
+              </property>
              </widget>
             </item>
            </layout>
@@ -87,7 +124,14 @@
        </layout>
       </item>
       <item>
-       <spacer name="verticalSpacer_2">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_5">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
@@ -98,6 +142,25 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="Line" name="line_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>•Step2</string>
+        </property>
+       </widget>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -138,14 +201,14 @@
           <item>
            <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>cleaned file name 1</string>
+             <string/>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>cleaned file name2</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -171,19 +234,12 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>Default is &quot;./splited_dataset&quot;</string>
-              </property>
-             </widget>
-            </item>
            </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QLabel" name="label_4">
             <property name="text">
-             <string>Use pattern from saved record</string>
+             <string>Default is &quot;./splited_dataset&quot;</string>
             </property>
            </widget>
           </item>
@@ -198,11 +254,22 @@
             <property name="text">
              <string>Split cleaned_file with pattern to output floder</string>
             </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>img/new_document.png</normaloff>img/new_document.png</iconset>
+            </property>
            </widget>
           </item>
          </layout>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="Line" name="line_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <spacer name="verticalSpacer">
@@ -216,6 +283,38 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="Line" name="line_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_9">
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>•Step3</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_2">
@@ -291,23 +390,23 @@
          </layout>
         </item>
         <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout"/>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_8">
-          <item>
-           <spacer name="verticalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_14">
             <item>
@@ -401,19 +500,6 @@
           </item>
          </layout>
         </item>
-        <item>
-         <spacer name="verticalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
        </layout>
       </item>
       <item>
@@ -426,6 +512,10 @@
         </property>
         <property name="text">
          <string>Check the splited file pair</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>img/new_compare.png</normaloff>img/new_compare.png</iconset>
         </property>
        </widget>
       </item>
@@ -472,6 +562,7 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
    <addaction name="actionPrint"/>
+   <addaction name="actionsetting"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -531,6 +622,15 @@
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionsetting">
+   <property name="icon">
+    <iconset>
+     <normaloff>img/new_setting.png</normaloff>img/new_setting.png</iconset>
+   </property>
+   <property name="text">
+    <string>setting</string>
    </property>
   </action>
  </widget>

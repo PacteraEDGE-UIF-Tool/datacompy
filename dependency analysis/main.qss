@@ -1,7 +1,14 @@
 
 QWidget {
-    background-color: #282734;
+    
+	/* it will take too long in loading*/
+	/*background:url(./img/app_background2.jpeg);*/
+	background-color: #282734;
     color: "white";
+}
+
+#line,#line_2, #line_3, #line_4, #line_5, #line_6{
+	background-color:rgb(28,29,41);
 }
 
 QPushButton {
@@ -39,7 +46,7 @@ QTreeView::item:selected {
 
 
 QCheckBox::indicator {
-    width: 40px;
+    width: 50px;
     height: 40px;
 }
 

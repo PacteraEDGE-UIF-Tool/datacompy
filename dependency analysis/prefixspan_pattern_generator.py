@@ -13,12 +13,14 @@ import sys
 import os
 import hashlib
 import pickle
+import pandas as pd
 
 
 import numpy as np
 
-import scipy
-from scipy.signal import savgol_filter
+#Maybe we can use the signal filter to get rid of noise, but not work ideally in the end
+#import scipy
+#from scipy.signal import savgol_filter
 from matplotlib import colors as mcolors 
 import matplotlib.pyplot as plt
 
@@ -33,14 +35,15 @@ WIN11_FILE_NAME=r"cleaned_data_win11.txt"
 MIN_RAND_VALUE=2
 MAX_RAND_VALUE=10
 #the minum threshold for pattern appear time
-PATTERN_NUMBER_THRESHOLD=5
+PATTERN_NUMBER_THRESHOLD=3
+#only take top Nth tokens
 PREFIX_SPAN_TOPK=5000
 DATABASE="Sqlite3.db"
 filtered_pattern_list=[]
 first_pattern_list=[]
 SPLITED_DATA_FOLDER_NAME='splited_dataset'
 INFO_FILE_NAME="CleanData_info.txt"
-
+import configparser
 '''
 Description
 
@@ -683,5 +686,9 @@ def split_data_main(filename1, filename2, dataset_path, NotRetrain=True):
         print(tokens[i:i+len(patterns_1)])
     print(tokens[286542:286576])
     '''
+
+def parseAndSetConfig():
+    pass
 if __name__=="__main__":
+    parseAndSetConfig()
     split_data_main(WIN10_FILE_NAME, WIN11_FILE_NAME, str(os.path.dirname(__file__)), USE_SAVED_DATA_MODE)

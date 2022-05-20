@@ -29,6 +29,6 @@ print(file_names)
 for file in file_names:
     convert(file)
 '''
-convert("toggle_off.png")
+convert("compare.png")
 
 

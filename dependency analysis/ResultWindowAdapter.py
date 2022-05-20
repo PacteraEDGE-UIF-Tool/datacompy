@@ -89,6 +89,9 @@ class CResultWindowAdapter(CResultWindow):
         self.CompareColName="Prototype"
         
     def setupData(self):
+        self.label.setText(os.path.basename(self.absfile1))
+        self.label_2.setText(os.path.basename(self.absfile2))
+
         self.tableWidget_2.setObjectName("tableWidget_2")
         self.tableWidget_2.setColumnCount(len(self.table2_column_names))
         self.tableWidget.setColumnCount(len(self.table1_column_names))
