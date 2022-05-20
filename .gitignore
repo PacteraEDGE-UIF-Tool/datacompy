@@ -1,0 +1,13 @@
+**/node_modules
+compare_result.csv
+**/*.db
+**/patterns.txt
+**/outfile
+**/splited_dataset/*
+**/*.pickle
+**/qt
+**/qt/*
+**/*.pyc
+**/*.txt
+**/pattern_match copy.py
+**/config.ini

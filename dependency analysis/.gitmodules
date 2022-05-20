@@ -1,0 +1,3 @@
+[submodule "datacompy"]
+	path = datacompy
+	url = https://github.com/N0nent1ty/datacompy
